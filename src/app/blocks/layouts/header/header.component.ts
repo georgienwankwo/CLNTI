@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { startCase } from 'lodash-es';
 import {
   IonButtons,
@@ -14,7 +14,7 @@ import {
   selector: 'app-header',
   templateUrl: `./header.component.html`,
   styleUrl: `./header.component.scss`,
-  imports: [IonHeader, IonTitle, IonToolbar, IonItem, IonMenuButton, IonButtons],
+  imports: [IonHeader, IonTitle, IonToolbar, IonItem, IonMenuButton, IonButtons, RouterModule],
 })
 export class HeaderComponent {
   pageName = 'Home';
