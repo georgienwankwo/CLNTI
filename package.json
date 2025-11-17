@@ -49,6 +49,7 @@
     "@spartan-ng/cli": "0.0.1-alpha.534",
     "@types/jasmine": "~5.1.0",
     "@types/lodash-es": "^4.17.12",
+    "@types/node": "^24.10.1",
     "@types/paystack__inline-js": "^1.0.2",
     "autoprefixer": "^10.4.21",
     "dotenv-webpack": "^8.1.1",

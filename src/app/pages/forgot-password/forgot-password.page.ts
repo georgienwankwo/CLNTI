@@ -18,7 +18,6 @@ export class ForgotPasswordPage {
 
   sendResetEmail() {
     if (!this.email) return;
-    // Call your backend API or Firebase to send reset email
     console.log('Password reset email sent to:', this.email);
   }
 }

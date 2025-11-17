@@ -64,7 +64,6 @@ export class SignupPage {
 
   async signInWithGoogle() {
     try {
-      // Example placeholder – replace with your real Google auth integration
       console.log('Google OAuth initiated');
       alert('Google login initiated (connect your auth SDK here).');
     } catch (err) {
@@ -74,7 +73,6 @@ export class SignupPage {
 
   async signInWithApple() {
     try {
-      // Example placeholder – replace with Apple SignIn plugin or your backend
       console.log('Apple OAuth initiated');
       alert('Apple login initiated (connect your auth SDK here).');
     } catch (err) {

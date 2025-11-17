@@ -13,6 +13,7 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
+    "types": ["node"],
     "module": "preserve"
   },
   "angularCompilerOptions": {
@@ -20,7 +21,7 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "typeCheckHostBindings": true,
-    "strictTemplates": true,
+    "strictTemplates": true
     // "strictInjectionParameters": false,
     // "strictInputAccessModifiers": false,
     // "typeCheckHostBindings": false,

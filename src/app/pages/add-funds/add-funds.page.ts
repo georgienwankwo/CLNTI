@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonInput, IonButton, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
 import PaystackPop from '@paystack/inline-js';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'page-add-funds',
@@ -15,7 +16,7 @@ export class AddFundsPage {
   currency = 'NGN';
   email = 'g@gmail.com';
   amountToAdd: number | null = null;
-  paystackPublicKey = import.meta.env.PAYSTACK_PUBLIC_KEY; // replace with your actual key
+  paystackPublicKey = environment.paystackPublicKey;
 
   payWithPaystack() {
     if (!this.amountToAdd || this.amountToAdd <= 0) {
@@ -26,8 +27,8 @@ export class AddFundsPage {
     const paystack = new PaystackPop();
     paystack.newTransaction({
       key: this.paystackPublicKey,
-      email: this.email, // ideally replace dynamically
-      amount: this.amountToAdd * 100, // convert to kobo
+      email: this.email,
+      amount: this.amountToAdd * 100,
       currency: this.currency,
       onSuccess: (response: any) => {
         console.log('Payment success:', response);

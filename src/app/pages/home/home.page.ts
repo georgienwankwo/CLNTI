@@ -6,7 +6,6 @@ import { TransactionsBlockComponent } from '../../blocks/transactions/transactio
   selector: 'page-home',
   templateUrl: `./home.page.html`,
   standalone: true,
-  // styleUrl: `./home.page.scss`,
   imports: [QuickActionsComponent, TransactionsBlockComponent],
 })
 export class HomePage {

@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent,
-  IonItem,
   IonInput,
   IonButton,
   IonText,
@@ -20,7 +18,6 @@ import { AuthLayoutComponent } from '../../../blocks/layouts/auth/auth-layout.co
   selector: 'app-login',
   templateUrl: './login.page.html',
   standalone: true,
-  styleUrl: './login.page.scss',
   imports: [
     CommonModule,
     FormsModule,
