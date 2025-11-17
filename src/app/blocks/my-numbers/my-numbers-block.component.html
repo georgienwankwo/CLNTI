@@ -1,0 +1,106 @@
+<section class="mt-4">
+  <div class="mb-4 flex items-center gap-3 flex-wrap">
+    <div class="relative w-[100%] sm:w-[350px]">
+      <input
+        type="text"
+        placeholder="Search numbers..."
+        [(ngModel)]="searchTerm"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+      />
+      <i class="ph ph-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+    </div>
+
+    <ion-select
+      interface="popover"
+      [(ngModel)]="selectedStatus"
+      class="w-[100%] sm:w-[150px] border border-gray-300 rounded-lg px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+    >
+      <ion-select-option value="all">All statuses</ion-select-option>
+      <ion-select-option value="active">Active</ion-select-option>
+      <ion-select-option value="expired">Expired</ion-select-option>
+    </ion-select>
+  </div>
+
+  <div class="border border-gray-200 rounded-lg overflow-hidden">
+    <div class="overflow-x-auto h-full">
+      @if (count === 0) {
+        <div
+          class="nil py-12 text-center text-gray-500 text-sm flex flex-col items-center justify-center gap-2 min-h-[300px]"
+        >
+          <i class="ph ph-phone mb-2 text-2xl"></i>
+          <p class="text-sm xl:text-lg">No numbers available yet</p>
+        </div>
+      } @else {
+        <ion-grid class="min-w-[1085px] bg-gray-50 font-semibold text-gray-600 text-sm">
+          <ion-row class="border-b border-gray-200 whitespace-nowrap">
+            <!-- <ion-col class="py-6 px-4 w-[155px]">ID</ion-col> -->
+            <ion-col class="py-6 px-4 w-[155px]">Number</ion-col>
+            <ion-col class="py-6 px-4 w-[155px]">Country</ion-col>
+            <ion-col class="py-6 px-4 w-[155px]">Status</ion-col>
+            <ion-col class="py-6 px-4 w-[155px]">Service</ion-col>
+            <ion-col class="py-6 px-4 w-[155px]">Expires At</ion-col>
+            <ion-col class="py-6 px-4 w-[155px]">Action</ion-col>
+            <ion-col class="py-6 px-4 w-[155px]">Code</ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ion-grid class="min-w-[1085px] text-sm text-gray-700">
+          @for (number of filteredNumbers; track number.id) {
+            <ion-row class="border-b border-gray-200 hover:bg-gray-50 transition whitespace-nowrap">
+              <!-- <ion-col class="w-[155px] py-6 px-4 font-mono text-gray-800">
+                {{ number.id }}
+              </ion-col> -->
+              <ion-col
+                class="py-6 px-4 whitespace-normal break-words w-[250px]"
+                title="{{ number.number }}"
+              >
+                {{ number.number }}
+              </ion-col>
+              <ion-col class="w-[155px] py-6 px-4">
+                {{ number.country }}
+              </ion-col>
+              <ion-col class="w-[155px] py-6 px-4">
+                {{ number.status }}
+              </ion-col>
+              <ion-col class="w-[155px] py-6 px-4">
+                {{ number.service }}
+              </ion-col>
+              <ion-col class="w-[155px] py-6 px-4">
+                {{ number.expires_at }}
+              </ion-col>
+              <ion-col class="w-[155px] py-6 px-4">
+                {{ number.action }}
+              </ion-col>
+              <ion-col class="w-[155px] py-6 px-4">
+                {{ number.code }}
+              </ion-col>
+            </ion-row>
+          }
+        </ion-grid>
+      }
+    </div>
+    @if (count > 0) {
+      <div
+        class="flex items-center justify-between px-4 py-3 border-t border-gray-200 text-sm text-gray-600"
+      >
+        <button
+          (click)="prevPage()"
+          [disabled]="currentPage === 1"
+          class="px-3 py-1 rounded-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Previous
+        </button>
+
+        <span>Showing {{ startIndex + 1 }}–{{ endIndex }} of {{ totalNumbers }}</span>
+
+        <button
+          (click)="nextPage()"
+          [disabled]="endIndex >= totalNumbers"
+          class="px-3 py-1 rounded-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Next
+        </button>
+      </div>
+    }
+  </div>
+</section>

@@ -1,0 +1,25 @@
+a {
+    color: var(--ion-color-dark);
+}
+
+i.ph {
+  font-size: 22px;
+  color: var(--ion-color-medium);
+  width: 16px;
+  text-align: center;
+  margin-right: 10px;
+}
+
+/* rainbow sequence for the first four icons */
+.actions-item:nth-child(1) i {
+  color: #ef4444; /* red-500 */
+}
+.actions-item:nth-child(2) i {
+  color: #f97316; /* orange-500 */
+}
+.actions-item:nth-child(3) i {
+  color: #eab308; /* yellow-500 */
+}
+.actions-item:nth-child(4) i {
+  color: #22c55e; /* green-500 */
+}

@@ -1,0 +1,20 @@
+<ion-header class="pt-4 md:pt-1 pl-4 pb-2 md:pb-0.5 pr-4 ion-no-border border-b-1 border-gray-200">
+  <div class="flex justify-between">
+    <ion-toolbar class="w-fit">
+      <div class="w-fit flex flex-row gap-2">
+        <ion-buttons slot="start">
+          <ion-menu-button autoHide="f"></ion-menu-button>
+        </ion-buttons>
+        <ion-title class="hidden md:block">Acme Inc</ion-title>
+        <ion-title class="md:hidden">{{ pageName }}</ion-title>
+      </div>
+    </ion-toolbar>
+    <ion-toolbar class="w-fit">
+      <div class="w-fit flex flex-row gap-2 h-fit">
+        <ion-item lines="none" routerLink="/profile" routerDirection="root">
+          <i class="ph ph-user-circle" slot="start"></i>
+        </ion-item>
+      </div>
+    </ion-toolbar>
+  </div>
+</ion-header>

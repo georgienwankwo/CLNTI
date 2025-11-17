@@ -1,0 +1,12 @@
+.nil i.ph {
+  font-size: 80px;
+  color: var(--ion-color-medium);
+  text-align: center;
+  margin-right: 10px;
+}
+
+ion-select{
+  --highlight-color-focused: #fff;
+  --highlight-color-invalid: #fff;
+  --highlight-color-valid: #fff;
+}

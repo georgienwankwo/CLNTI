@@ -1,0 +1,59 @@
+<section class="mt-4">
+  @if (!hideTitle) {
+    <div class="mb-4">
+      <p class="text-md font-medium text-gray-600">Transactions</p>
+    </div>
+  }
+  <div class="border border-gray-200 rounded-lg overflow-hidden">
+    <div class="overflow-x-auto h-full">
+      @if (count === 0) {
+        <div
+          class="py-12 text-center text-gray-500 text-sm flex flex-col items-center justify-center gap-2 min-h-[300px]"
+        >
+          <i class="ph ph-empty mb-2 text-2xl"></i>
+          <p class="text-sm xl:text-lg">No transactions available yet</p>
+        </div>
+      } @else {
+        <ion-grid class="min-w-[775px] bg-gray-50 font-semibold text-gray-600 text-sm">
+          <ion-row class="border-b border-gray-200 whitespace-nowrap">
+            <ion-col class="py-6 px-4 min-w-[155px]">Transaction ID</ion-col>
+            <ion-col class="py-6 px-4 min-w-[155px]">Type</ion-col>
+            <ion-col class="py-6 px-4 min-w-[155px]">Status</ion-col>
+            <ion-col class="py-6 px-4 min-w-[155px]">Amount</ion-col>
+            <ion-col class="py-6 px-4 min-w-[155px]">Date</ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-grid class="min-w-[775px] text-sm text-gray-700">
+          @for (txn of transactions; track txn.id) {
+            <ion-row class="border-b border-gray-200 hover:bg-gray-50 transition whitespace-nowrap">
+              <ion-col class="min-w-[155px] py-6 px-4 font-mono text-gray-800">
+                {{ txn.id }}
+              </ion-col>
+              <ion-col class="min-w-[155px] py-6 px-4">
+                {{ txn.type }}
+              </ion-col>
+              <ion-col class="min-w-[155px] py-6 px-4">
+                <span
+                  [ngClass]="{
+                    'bg-green-100 text-green-700': txn.status === 'Successful',
+                    'bg-yellow-100 text-yellow-700': txn.status === 'Pending',
+                    'bg-red-100 text-red-700': txn.status === 'Failed',
+                  }"
+                  class="px-2 py-1 text-xs rounded-full font-medium"
+                >
+                  {{ txn.status }}
+                </span>
+              </ion-col>
+              <ion-col class="min-w-[155px] py-6 px-4 font-medium text-gray-900">
+                ₦{{ txn.amount | number }}
+              </ion-col>
+              <ion-col class="min-w-[155px] py-6 px-4">
+                {{ txn.date }}
+              </ion-col>
+            </ion-row>
+          }
+        </ion-grid>
+      }
+    </div>
+  </div>
+</section>

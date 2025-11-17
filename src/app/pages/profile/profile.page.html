@@ -1,0 +1,102 @@
+<main class="p-4 h-full w-full overflow-y-auto">
+  <div class="mb-8 mt-4">
+    <h1 class="md:!text-3xl text-2xl font-semibold">Profile</h1>
+    <p class="text-sm text-gray-500 mt-1">Manage your personal details and account settings</p>
+  </div>
+
+  <div class="mb-6 rounded-xl border border-gray-100 bg-white p-4 md:p-6 max-w-[800px]">
+    <div class="mb-8">
+      <p class="text-lg font-medium">Profile Details</p>
+      <p class="text-sm text-gray-500">Update your personal information</p>
+    </div>
+
+    <form class="flex flex-col gap-4">
+      <ion-input
+        label="First Name"
+        label-placement="floating"
+        fill="outline"
+        type="text"
+        placeholder="Enter first name"
+        [(ngModel)]="firstName"
+        name="firstName"
+      ></ion-input>
+
+      <ion-input
+        label="Last Name"
+        fill="outline"
+        label-placement="floating"
+        type="text"
+        placeholder="Enter last name"
+        [(ngModel)]="lastName"
+        name="lastName"
+      ></ion-input>
+
+      <ion-input
+        label="Email"
+        fill="outline"
+        label-placement="floating"
+        type="email"
+        placeholder="example@mail.com"
+        [disabled]="true"
+        [(ngModel)]="email"
+        name="email"
+      ></ion-input>
+
+      <ion-input
+        label="Phone Number"
+        fill="outline"
+        label-placement="floating"
+        type="tel"
+        placeholder="Enter phone number"
+        [(ngModel)]="phone"
+        name="phone"
+      ></ion-input>
+
+      <div class="mt-4 flex justify-start">
+        <ion-button color="primary" (click)="saveProfile()">Save Changes</ion-button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Change Password Card -->
+  <div class="rounded-xl border border-gray-100 bg-white p-4 md:p-6 max-w-[800px]">
+    <div class="mb-6">
+      <p class="text-lg font-medium">Change Password</p>
+      <p class="text-sm text-gray-500">Update your account password</p>
+    </div>
+
+    <form class="flex flex-col gap-4">
+      <ion-input
+        label="Current Password"
+        fill="outline"
+        label-placement="floating"
+        type="password"
+        placeholder="Enter current password"
+        [(ngModel)]="currentPassword"
+        name="currentPassword"
+      ></ion-input>
+      <ion-input
+        label="New Password"
+        fill="outline"
+        label-placement="floating"
+        type="password"
+        placeholder="Enter new password"
+        [(ngModel)]="newPassword"
+        name="newPassword"
+      ></ion-input>
+      <ion-input
+        label="Confirm Password"
+        fill="outline"
+        label-placement="floating"
+        type="password"
+        placeholder="Confirm new password"
+        [(ngModel)]="confirmPassword"
+        name="confirmPassword"
+      ></ion-input>
+
+      <div class="mt-4 flex justify-start">
+        <ion-button color="primary" (click)="changePassword()"> Update Password </ion-button>
+      </div>
+    </form>
+  </div>
+</main>

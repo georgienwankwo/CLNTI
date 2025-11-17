@@ -1,1 +1,46 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'tailwindcss';
+
+@import '@ionic/angular/css/core.css';
+@import '@ionic/angular/css/normalize.css';
+@import '@ionic/angular/css/structure.css';
+@import '@ionic/angular/css/typography.css';
+@import '@ionic/angular/css/padding.css';
+@import '@ionic/angular/css/float-elements.css';
+@import '@ionic/angular/css/text-alignment.css';
+@import '@ionic/angular/css/text-transformation.css';
+@import '@ionic/angular/css/flex-utils.css';
+@import '@ionic/angular/css/display.css';
+
+@import '@angular/cdk/overlay-prebuilt.css';
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6, p, a {
+  margin: 0;
+}
+
+.select-highlight{
+  background: none !important;
+}
+
+:root {
+  --ion-color-primary: #2f0448;
+  --ion-color-primary-rgb: 160, 32, 240;
+
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+
+  --ion-color-primary-shade: #8c1cd3;
+  --ion-color-primary-tint: #b236f5;
+}
+
+ion-input {
+  --highlight-color-valid: var(--ion-color-primary) !important;
+}
+
+ion-select {
+  --highlight-color-valid: transparent;
+}

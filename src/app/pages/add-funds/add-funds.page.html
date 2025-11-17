@@ -1,0 +1,52 @@
+<main class="p-4 h-full w-full overflow-y-auto">
+  <div class="mb-8 mt-4">
+    <h1 class="md:!text-3xl text-2xl">Add Funds</h1>
+    <p class="md:!text-lg text-sm text-gray-400 font-light">
+      View and manage your purchased numbers
+    </p>
+  </div>
+  <div class="max-w-[500px] mb-8">
+    <div
+      class="relative block w-full bg-white rounded-[10px] before:block before:pt-[40%] md:before:pt-[55%] xl:before:pt-[70%] before:content-['']"
+    >
+      <div class="absolute top-0 w-full h-full">
+        <div
+          class="relative w-full h-full bg-[#fbf5fe] flex flex-col items-center justify-between p-6 rounded-lg"
+        >
+          <div class="w-full text-gray-600 text-md">
+            <p>Current Balance</p>
+          </div>
+          <div class="w-full">
+            <p class="text-4xl font-semibold">
+              <span class="text-lg font-medium">₦</span>{{ currentBalance }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ion-input
+      class="my-6"
+      label="Enter Amount"
+      fill="outline"
+      label-placement="floating"
+      type="number"
+      placeholder="e.g. 5000"
+      [(ngModel)]="amountToAdd"
+      name="amountToAdd"
+    ></ion-input>
+    <ion-select
+      [(ngModel)]="currency"
+      label="Currency"
+      interface="popover"
+      fill="outline"
+      label-placement="floating"
+    >
+      <ion-select-option value="NGN">NGN - Nigerian Naira</ion-select-option>
+    </ion-select>
+    <div class="mt-6 max-w-md">
+      <ion-button color="primary" expand="block" (click)="payWithPaystack()">
+        Pay using Paystack
+      </ion-button>
+    </div>
+  </div>
+</main>

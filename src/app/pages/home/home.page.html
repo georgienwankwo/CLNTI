@@ -1,0 +1,82 @@
+<main class="p-4 h-full w-full overflow-y-auto">
+  <div id="greeting" class="mb-8 mt-4">
+    <p class="md:!text-lg text-sm text-gray-400 font-light">Welcome Back,</p>
+    <h1 class="md:!text-3xl text-2xl">{{ firstName }}</h1>
+  </div>
+  <quick-actions />
+  <div class="mt-4 mb-8">
+    <div class="mb-4 mt-2">
+      <p class="text-md font-medium text-gray-600">Metrics</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2" height="500px">
+      <div
+        class="relative block w-full bg-white rounded-[10px] before:block before:pt-[40%] md:before:pt-[55%] xl:before:pt-[70%] before:content-['']"
+      >
+        <div class="absolute top-0 w-full h-full">
+          <div
+            class="relative w-full h-full bg-[#fbf5fe] flex flex-col items-center justify-between p-6 rounded-lg"
+          >
+            <div class="w-full text-gray-600 text-md">
+              <p>Current Balance</p>
+            </div>
+            <div class="w-full">
+              <p class="text-4xl font-semibold">
+                <span class="text-lg font-medium">₦</span>120,000
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="relative block w-full bg-white rounded-[10px] before:block before:pt-[40%] md:before:pt-[55%] xl:before:pt-[70%] before:content-['']"
+      >
+        <div class="absolute top-0 w-full h-full">
+          <div
+            class="relative w-full h-full bg-[#f3e2fd] flex flex-col items-center justify-between p-6 rounded-lg"
+          >
+            <div class="w-full text-gray-600 text-md">
+              <p>Total Numbers</p>
+            </div>
+            <div class="w-full">
+              <p class="text-4xl font-semibold">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="relative block w-full bg-white rounded-[10px] before:block before:pt-[40%] md:before:pt-[55%] xl:before:pt-[70%] before:content-['']"
+      >
+        <div class="absolute top-0 w-full h-full">
+          <div
+            class="relative w-full h-full bg-[#ebcffc] flex flex-col items-center justify-between p-6 rounded-lg"
+          >
+            <div class="w-full text-gray-600 text-md">
+              <p>SMS Received</p>
+            </div>
+            <div class="w-full">
+              <p class="text-4xl font-semibold">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="relative block w-full bg-white rounded-[10px] before:block before:pt-[40%] md:before:pt-[55%] xl:before:pt-[70%] before:content-['']"
+      >
+        <div class="absolute top-0 w-full h-full">
+          <div
+            class="relative w-full h-full bg-[#e3bcfb] flex flex-col items-center justify-between p-6 rounded-lg"
+          >
+            <div class="w-full text-gray-600 text-md">
+              <p>Total Purchased</p>
+            </div>
+            <div class="w-full">
+              <p class="text-4xl font-semibold">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <transactions-block />
+</main>

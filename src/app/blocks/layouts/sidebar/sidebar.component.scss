@@ -1,0 +1,31 @@
+ion-split-pane {
+  --side-width: 250px;
+  --side-max-width: 350px;
+}
+ion-menu ion-toolbar {
+  --background: #f5e7fe;
+  --box-shadow: none;
+}
+
+ion-item i.ph {
+  font-size: 20px;
+  color: var(--ion-color-medium);
+  width: 24px;
+  text-align: center;
+  margin-right: 10px;
+}
+
+ion-item {
+  cursor: pointer;
+  border-radius: 10px;
+  margin-bottom: 2px;
+}
+
+ion-item:hover {
+  --background: #f5e7fe;
+}
+
+ion-item:active,
+ion-item.active {
+  --background: #f5e7fe;
+}

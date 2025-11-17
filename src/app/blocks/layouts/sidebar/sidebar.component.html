@@ -1,0 +1,104 @@
+<div class="flex flex-col justify-between h-full pl-3 pr-3 border-r-1 border-gray-200">
+  <ion-list class="menu-top">
+    <ion-list-header class="pl-4">
+      <ion-label class="font-normal">Main Menu</ion-label>
+    </ion-list-header>
+    <ion-menu-toggle autoHide="false">
+      <ion-item lines="none" routerLink="/" routerDirection="root" [class.active]="isActive('/')">
+        <i class="ph ph-house" slot="start"></i>
+        <ion-label class="font-normal">Home</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+    <ion-menu-toggle autoHide="false">
+      <ion-item
+        lines="none"
+        menu-close
+        routerLink="/sms"
+        routerDirection="root"
+        [class.active]="isActive('/sms')"
+      >
+        <i class="ph ph-chat-circle-text" slot="start"></i>
+        <ion-label class="font-normal">SMS</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+
+    <ion-menu-toggle autoHide="false">
+      <ion-item
+        lines="none"
+        menu-close
+        routerLink="/transactions"
+        routerDirection="root"
+        [class.active]="isActive('/transactions')"
+      >
+        <i class="ph ph-currency-circle-dollar" slot="start"></i>
+        <ion-label class="font-normal">Transactions</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+
+    <ion-menu-toggle autoHide="false">
+      <ion-item
+        lines="none"
+        menu-close
+        routerLink="/rent-numbers"
+        routerDirection="root"
+        [class.active]="isActive('/rent-numbers')"
+      >
+        <i class="ph ph-phone-incoming" slot="start"></i>
+        <ion-label class="font-normal">Rent Numbers</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+    <ion-menu-toggle autoHide="false">
+      <ion-item
+        lines="none"
+        menu-close
+        routerLink="/my-numbers"
+        routerDirection="root"
+        [class.active]="isActive('/my-numbers')"
+      >
+        <i class="ph ph-phone" slot="start"></i>
+        <ion-label class="font-normal">My Numbers</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+  </ion-list>
+
+  <ion-list class="menu-bottom">
+    <ion-menu-toggle autoHide="false">
+      <ion-item
+        lines="none"
+        menu-close
+        routerLink="/add-funds"
+        routerDirection="root"
+        [class.active]="isActive('/add-funds')"
+      >
+        <i class="ph ph-currency-circle-dollar" slot="start"></i>
+        <ion-label class="font-normal">Add Funds</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+
+    <ion-menu-toggle autoHide="false">
+      <ion-item
+        lines="none"
+        menu-close
+        routerLink="/profile"
+        routerDirection="root"
+        [class.active]="isActive('/profile')"
+      >
+        <i class="ph ph-user-circle" slot="start"></i>
+        <ion-label class="font-normal">Profile</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+
+    <ion-menu-toggle autoHide="false">
+      <ion-item
+        lines="none"
+        menu-close
+        routerLink="/logout"
+        routerDirection="root"
+        [class.active]="isActive('/logout')"
+      >
+        <i class="ph ph-sign-out" slot="start"></i>
+        <ion-label class="font-normal">Logout</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+  </ion-list>
+</div>

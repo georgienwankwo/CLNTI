@@ -1,0 +1,68 @@
+<auth-layout>
+  <div class="flex justify-center items-center flex-col gap-2 mb-12">
+    <p class="text-xl font-semibold">Login</p>
+    <p class="text-sm text-center text-gray-500">
+      Enter your Email and Password to use your account
+    </p>
+  </div>
+  <div class="max-w-md mx-auto mt-8 space-y-6">
+    <ion-input
+      label="Email"
+      label-placement="floating"
+      fill="outline"
+      type="email"
+      [(ngModel)]="email"
+      placeholder="you@example.com"
+      class="custom-outline"
+      required
+    ></ion-input>
+    <ion-input
+      label="Password"
+      label-placement="floating"
+      fill="outline"
+      [type]="showPassword ? 'text' : 'password'"
+      [(ngModel)]="password"
+      placeholder="Enter password"
+      required
+    >
+      <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+    </ion-input>
+    <div class="text-right">
+      <a
+        class="text-primary text-sm font-medium cursor-pointer"
+        [routerLink]="['/auth/forgot-password']"
+      >
+        Forgot password?
+      </a>
+    </div>
+    <ion-button expand="block" color="primary" class="mt-4 mb-8" (click)="login()">
+      Sign In
+    </ion-button>
+    <div class="flex items-center justify-center my-8">
+      <div class="flex-1 border-t border-gray-200"></div>
+      <span class="px-3 text-gray-500 text-sm">or continue with</span>
+      <div class="flex-1 border-t border-gray-200"></div>
+    </div>
+    <div class="flex justify-center space-x-4 my-8">
+      <ion-button
+        class="rounded-full w-12 h-12 flex items-center justify-center"
+        (click)="signInWithGoogle()"
+      >
+        <ion-icon name="logo-google" slot="icon-only"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="rounded-full w-12 h-12 flex items-center justify-center"
+        (click)="signInWithApple()"
+      >
+        <ion-icon name="logo-apple" slot="icon-only"></ion-icon>
+      </ion-button>
+    </div>
+    <div class="text-center mt-4">
+      <ion-text color="medium">
+        Don’t have an account?
+        <a [routerLink]="['/auth/signup']" class="text-primary font-medium">Create one</a>
+      </ion-text>
+    </div>
+  </div>
+</auth-layout>
