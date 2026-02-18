@@ -1,39 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonCol, IonGrid, IonRow } from '@ionic/angular/standalone';
+import { IonCol, IonGrid, IonRow, IonSpinner } from '@ionic/angular/standalone';
 import { Message } from './types';
+import { SmsService } from '../../core/services/sms.service';
+import { inject, OnInit, OnDestroy } from '@angular/core';
+import { Subscription, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'messages-block',
   templateUrl: './messages-block.component.html',
   styleUrls: ['./messages-block.component.scss'],
-  imports: [IonGrid, IonCol, IonRow, CommonModule, FormsModule],
+  imports: [IonGrid, IonCol, IonRow, CommonModule, FormsModule, IonSpinner],
 })
-export class MessagesBlockComponent {
-  messages: Array<Message> = [
-    {
-      id: 'MSG-001',
-      number: '+2348012345678',
-      message: 'Your verification code is 482913. It expires in 10 minutes.',
-      service: 'Twilio',
-      received_at: '2025-11-02 14:32:10',
-    },
-    {
-      id: 'MSG-002',
-      number: '+2348098765432',
-      message: 'Payment of ₦5,000 was received successfully. Thank you for your business.',
-      service: 'Paystack',
-      received_at: '2025-11-02 15:47:29',
-    },
-    {
-      id: 'MSG-003',
-      number: '+2348076543210',
-      message: 'Your number has been rented successfully and will expire on 2025-12-02.',
-      service: 'Game',
-      received_at: '2025-11-02 16:12:04',
-    },
-  ];
+export class MessagesBlockComponent implements OnInit, OnDestroy {
+  messages: Array<Message> = [];
+  isLoading = signal(false);
+  private smsService = inject(SmsService);
+  private pollSubscription?: Subscription;
 
   searchTerm = '';
   currentPage = 1;
@@ -42,6 +27,39 @@ export class MessagesBlockComponent {
   totalMessages = 0;
   startIndex = 0;
   endIndex = 0;
+
+  ngOnInit() {
+    this.startPolling();
+  }
+
+  ngOnDestroy() {
+    this.pollSubscription?.unsubscribe();
+  }
+
+  startPolling() {
+    this.isLoading.set(true);
+    this.pollSubscription = timer(0, 10000)
+      .pipe(switchMap(() => this.smsService.getHistory()))
+      .subscribe({
+        next: (res) => {
+          // Mapping purchases that have a code to the Message interface
+          this.messages = res.data
+            .filter((item: any) => item.code)
+            .map((item: any) => ({
+              id: `msg-${item.id}`,
+              number: item.number,
+              message: `Your verification code is ${item.code}`,
+              service: item.serviceId,
+              received_at: item.receivedAt || item.createdAt,
+            }));
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          console.error('Error polling messages', err);
+          this.isLoading.set(false);
+        },
+      });
+  }
 
   get count() {
     return this.messages.length;

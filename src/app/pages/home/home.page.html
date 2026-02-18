@@ -1,7 +1,7 @@
 <main class="p-4 h-full w-full overflow-y-auto">
   <div id="greeting" class="mb-8 mt-4">
     <p class="md:!text-lg text-sm text-gray-400 font-light">Welcome Back,</p>
-    <h1 class="md:!text-3xl text-2xl">{{ firstName }}</h1>
+    <h1 class="md:!text-3xl text-2xl">{{ firstName() }}</h1>
   </div>
   <quick-actions />
   <div class="mt-4 mb-8">
@@ -21,7 +21,7 @@
             </div>
             <div class="w-full">
               <p class="text-4xl font-semibold">
-                <span class="text-lg font-medium">₦</span>120,000
+                <span class="text-lg font-medium">₦</span>{{ balance() }}
               </p>
             </div>
           </div>
@@ -78,5 +78,5 @@
     </div>
   </div>
 
-  <transactions-block />
+  <transactions-block [limit]="5" [hideTitle]="false" />
 </main>

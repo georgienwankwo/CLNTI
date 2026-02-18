@@ -21,7 +21,12 @@
     </ion-select>
   </div>
 
-  <div class="border border-gray-200 rounded-lg overflow-hidden">
+  <div class="border border-gray-200 rounded-lg overflow-hidden relative">
+    @if (isLoading()) {
+      <div class="absolute inset-0 bg-white/50 z-10 flex items-center justify-center">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+    }
     <div class="overflow-x-auto h-full">
       @if (count === 0) {
         <div

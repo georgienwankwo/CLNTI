@@ -1,69 +1,30 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonButton, IonItem, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
+import {
+  IonButton,
+  IonItem,
+  IonSelect,
+  IonSelectOption,
+  IonLoading,
+  IonSpinner,
+} from '@ionic/angular/standalone';
+import { SmsService } from '../../core/services/sms.service';
 
 @Component({
   selector: 'app-rent-number',
   templateUrl: './rent-numbers.page.html',
   standalone: true,
-  imports: [IonButton, IonItem, IonSelect, IonSelectOption, FormsModule, CommonModule],
+  imports: [IonButton, IonItem, IonSelect, IonSelectOption, IonSpinner, FormsModule, CommonModule],
 })
 export class RentNumbersPage implements OnInit {
   hosts = [
-    {
-      id: '1',
-      name: 'Host A',
-      requiresCountry: true,
-      countries: [
-        {
-          name: 'Nigeria',
-          services: [
-            { name: 'MTN', price: 300 },
-            { name: 'Airtel', price: 250 },
-          ],
-        },
-        {
-          name: 'Ghana',
-          services: [
-            { name: 'MTN Ghana', price: 320 },
-            { name: 'Vodafone', price: 280 },
-          ],
-        },
-      ],
-    },
-    {
-      id: '2',
-      name: 'Host B',
-      requiresCountry: false,
-      services: [
-        { name: 'Telegram', price: 150 },
-        { name: 'WhatsApp', price: 200 },
-        { name: 'Signal', price: 180 },
-      ],
-    },
-    {
-      id: '3',
-      name: 'Host C',
-      requiresCountry: true,
-      countries: [
-        {
-          name: 'Kenya',
-          services: [
-            { name: 'Safaricom', price: 310 },
-            { name: 'Airtel Kenya', price: 260 },
-          ],
-        },
-        {
-          name: 'South Africa',
-          services: [
-            { name: 'MTN SA', price: 350 },
-            { name: 'Vodacom', price: 300 },
-          ],
-        },
-      ],
-    },
+    { id: 'host_1', name: 'Host A', requiresCountry: true },
+    { id: 'host_2', name: 'Host B', requiresCountry: true },
+    { id: 'host_3', name: 'Host C', requiresCountry: true },
   ];
+
+  private smsService = inject(SmsService);
 
   hostSelected = this.hosts[0].id;
 
@@ -78,8 +39,9 @@ export class RentNumbersPage implements OnInit {
   countrySearchTerm = '';
   serviceSearchTerm = '';
 
-  filteredCountries: string[] = [];
-  filteredServices: { name: string; price: number }[] = [];
+  filteredCountries: any[] = [];
+  filteredServices: any[] = [];
+  isLoading = signal(false);
 
   ngOnInit() {
     this.updateFilteredOptions();
@@ -101,8 +63,9 @@ export class RentNumbersPage implements OnInit {
 
   filterCountries() {
     const term = this.countrySearchTerm.toLowerCase();
-    const allCountries = this.activeHost.countries?.map((c: any) => c.name) || [];
-    this.filteredCountries = allCountries.filter((c) => c.toLowerCase().includes(term));
+    this.filteredCountries = this.filteredCountries.filter((c) =>
+      c.name.toLowerCase().includes(term),
+    );
   }
 
   filterServices() {
@@ -119,35 +82,51 @@ export class RentNumbersPage implements OnInit {
   }
 
   updateFilteredOptions() {
-    if (this.activeHost.requiresCountry) {
-      // Country-based host
-      const countries = this.activeHost.countries?.map((c: any) => c.name) || [];
-      this.filteredCountries = [...countries];
-
-      if (this.selectedCountry) {
-        const selectedCountryData = this.activeHost.countries?.find(
-          (c: any) => c.name === this.selectedCountry,
-        );
-        this.filteredServices = selectedCountryData?.services || [];
-      } else {
-        this.filteredServices = [];
-      }
+    this.isLoading.set(true);
+    if (this.selectedCountry) {
+      this.smsService.getServices(this.hostSelected, this.selectedCountry).subscribe({
+        next: (res) => {
+          this.filteredServices = res.data;
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          console.error(err);
+          this.isLoading.set(false);
+        },
+      });
     } else {
-      // Host defines services globally
-      this.filteredCountries = [];
-      this.filteredServices = this.activeHost.services || [];
+      this.smsService.getCountries(this.hostSelected).subscribe({
+        next: (res) => {
+          this.filteredCountries = res.data;
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          console.error(err);
+          this.isLoading.set(false);
+        },
+      });
     }
   }
 
   calculateTotal() {
-    const service = this.filteredServices.find((s) => s.name === this.selectedService);
+    const service = this.filteredServices.find((s) => s.id === this.selectedService);
     this.totalCost = service ? service.price : 0;
   }
 
   confirmPurchase() {
-    console.log('Host:', this.activeHost.name);
-    console.log('Country:', this.selectedCountry);
-    console.log('Service:', this.selectedService);
-    console.log('Total:', this.totalCost);
+    this.isLoading.set(true);
+    this.smsService
+      .purchaseNumber(this.hostSelected, this.selectedService, this.selectedCountry)
+      .subscribe({
+        next: (res) => {
+          console.log('Purchase successful:', res.data);
+          this.isLoading.set(false);
+          // Redirect or show success
+        },
+        error: (err) => {
+          console.error('Purchase failed:', err);
+          this.isLoading.set(false);
+        },
+      });
   }
 }

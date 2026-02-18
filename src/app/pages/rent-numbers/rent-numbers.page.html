@@ -33,7 +33,7 @@
   </div>
   <div class="space-y-6">
     @if (activeHost.requiresCountry) {
-      <ion-item class="rounded-lg border border-gray-200 overflow-hidden">
+      <ion-item class="rounded-lg border border-gray-200 overflow-hidden relative">
         <ion-select
           label="Country"
           placeholder="Select Country"
@@ -42,13 +42,18 @@
           interface="popover"
           class="w-full"
         >
-          <ion-select-option *ngFor="let country of filteredCountries" [value]="country">
-            {{ country }}
+          <ion-select-option *ngFor="let country of filteredCountries" [value]="country.code">
+            {{ country.name }}
           </ion-select-option>
         </ion-select>
+        @if (isLoading() && !selectedCountry) {
+          <div class="absolute right-10 top-1/2 -translate-y-1/2">
+            <ion-spinner name="crescent" size="small"></ion-spinner>
+          </div>
+        }
       </ion-item>
     }
-    <ion-item class="rounded-lg border border-gray-200 overflow-hidden">
+    <ion-item class="rounded-lg border border-gray-200 overflow-hidden relative">
       <ion-select
         label="Service"
         placeholder="Select Service"
@@ -58,10 +63,15 @@
         class="w-full"
         [disabled]="filteredServices.length < 1"
       >
-        <ion-select-option *ngFor="let service of filteredServices" [value]="service.name">
+        <ion-select-option *ngFor="let service of filteredServices" [value]="service.id">
           {{ service.name }} - ₦{{ service.price }}
         </ion-select-option>
       </ion-select>
+      @if (isLoading() && selectedCountry && filteredServices.length === 0) {
+        <div class="absolute right-10 top-1/2 -translate-y-1/2">
+          <ion-spinner name="crescent" size="small"></ion-spinner>
+        </div>
+      }
     </ion-item>
     @if (totalCost > 0) {
       <div class="py-6">

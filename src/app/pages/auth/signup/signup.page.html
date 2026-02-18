@@ -4,55 +4,83 @@
     <p class="text-sm text-center text-gray-500">Fill in your details to get started</p>
   </div>
 
-  <div class="max-w-md mx-auto mt-8 space-y-6">
+  <form [formGroup]="signupForm" (ngSubmit)="signup()" class="max-w-md mx-auto mt-8 space-y-6">
     <ion-input
       required
       label="Full Name"
       label-placement="floating"
       fill="outline"
       type="text"
-      [(ngModel)]="name"
+      formControlName="name"
       placeholder="Enter your full name"
+      [errorText]="nameError"
+      [class.ion-invalid]="nameError"
     ></ion-input>
+    
     <ion-input
       required
       label="Email"
       label-placement="floating"
       fill="outline"
       type="email"
-      [(ngModel)]="email"
+      formControlName="email"
       placeholder="you@example.com"
+      [errorText]="emailError"
+      [class.ion-invalid]="emailError"
     ></ion-input>
+
     <ion-input
       required
       label="Password"
       label-placement="floating"
       fill="outline"
       [type]="showPassword ? 'text' : 'password'"
-      [(ngModel)]="password"
+      formControlName="password"
       placeholder="Enter password"
+      [errorText]="passwordError"
+      [class.ion-invalid]="passwordError"
     >
       <ion-input-password-toggle slot="end"></ion-input-password-toggle>
     </ion-input>
+    
     <ion-input
       required
       label="Confirm Password"
       label-placement="floating"
       fill="outline"
       [type]="showConfirmPassword ? 'text' : 'password'"
-      [(ngModel)]="confirmPassword"
+      formControlName="confirmPassword"
       placeholder="Confirm password"
+      [errorText]="confirmPasswordError"
+      [class.ion-invalid]="confirmPasswordError"
+      [class.ion-valid]="!confirmPasswordError"
     >
       <ion-input-password-toggle slot="end"></ion-input-password-toggle>
     </ion-input>
-    <ion-button expand="block" color="primary" class="mt-4 mb-8" (click)="signup()">
-      Create Account
+    <p>
+      {{ confirmPasswordError }}
+    </p>
+
+    @if (errorMessage()) {
+      <p class="text-red-500 text-sm font-medium">
+        {{ errorMessage() }}
+      </p>
+    }
+    
+    <ion-button expand="block" color="primary" class="mt-4 mb-8" type="submit" [disabled]="loading() || signupForm.invalid">
+      @if (!loading()) {
+        <span>Create Account</span>
+      } @else {
+        <ion-spinner name="crescent"></ion-spinner>
+      }
     </ion-button>
+    
     <div class="flex items-center justify-center my-8">
       <div class="flex-1 border-t border-gray-200"></div>
       <span class="px-3 text-gray-500 text-sm">or continue with</span>
       <div class="flex-1 border-t border-gray-200"></div>
     </div>
+    
     <div class="flex justify-center space-x-4 my-8">
       <ion-button
         class="rounded-full w-12 h-12 flex items-center justify-center"
@@ -68,11 +96,12 @@
         <ion-icon name="logo-apple" slot="icon-only"></ion-icon>
       </ion-button>
     </div>
+    
     <div class="text-center mt-4">
       <ion-text color="medium">
         Already have an account?
         <a [routerLink]="['/auth/login']" class="text-primary font-medium">Sign in</a>
       </ion-text>
     </div>
-  </div>
+  </form>
 </auth-layout>

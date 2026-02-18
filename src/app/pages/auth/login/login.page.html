@@ -5,28 +5,37 @@
       Enter your Email and Password to use your account
     </p>
   </div>
-  <div class="max-w-md mx-auto mt-8 space-y-6">
+  <form [formGroup]="loginForm" (ngSubmit)="login()" class="max-w-md mx-auto mt-8 space-y-6">
     <ion-input
       label="Email"
       label-placement="floating"
       fill="outline"
       type="email"
-      [(ngModel)]="email"
+      formControlName="email"
       placeholder="you@example.com"
       class="custom-outline"
-      required
+      [errorText]="emailError"
+      [class.ion-invalid]="emailError"
     ></ion-input>
     <ion-input
       label="Password"
       label-placement="floating"
       fill="outline"
       [type]="showPassword ? 'text' : 'password'"
-      [(ngModel)]="password"
+      formControlName="password"
       placeholder="Enter password"
-      required
+      [errorText]="passwordError"
+      [class.ion-invalid]="passwordError"
     >
       <ion-input-password-toggle slot="end"></ion-input-password-toggle>
     </ion-input>
+    @if (errorMessage()) {
+      <p
+        class="text-red-500 text-sm font-medium"
+      >
+        {{ errorMessage() }}
+        </p>
+    }
     <div class="text-right">
       <a
         class="text-primary text-sm font-medium cursor-pointer"
@@ -35,9 +44,16 @@
         Forgot password?
       </a>
     </div>
-    <ion-button expand="block" color="primary" class="mt-4 mb-8" (click)="login()">
-      Sign In
+    <div class="mb-8">
+    <ion-button expand="block" color="primary" class="mt-6 mb-2" type="submit" [disabled]="loading() || loginForm.invalid">
+      @if (!loading()) {
+        <span>Sign In</span>
+      } @else {
+        <ion-spinner name="crescent"></ion-spinner>
+      }
     </ion-button>
+    </div>
+
     <div class="flex items-center justify-center my-8">
       <div class="flex-1 border-t border-gray-200"></div>
       <span class="px-3 text-gray-500 text-sm">or continue with</span>
@@ -64,5 +80,5 @@
         <a [routerLink]="['/auth/signup']" class="text-primary font-medium">Create one</a>
       </ion-text>
     </div>
-  </div>
+  </form>
 </auth-layout>

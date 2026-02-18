@@ -10,16 +10,21 @@
       <p class="text-sm text-gray-500">Update your personal information</p>
     </div>
 
-    <form class="flex flex-col gap-4">
+    <form [formGroup]="profileForm" class="flex flex-col gap-4">
       <ion-input
         label="First Name"
         label-placement="floating"
         fill="outline"
         type="text"
         placeholder="Enter first name"
-        [(ngModel)]="firstName"
-        name="firstName"
+        formControlName="firstName"
       ></ion-input>
+      <ion-text
+        color="danger"
+        *ngIf="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched"
+      >
+        <p class="text-xs ml-2 -mt-3">First name is required</p>
+      </ion-text>
 
       <ion-input
         label="Last Name"
@@ -27,9 +32,14 @@
         label-placement="floating"
         type="text"
         placeholder="Enter last name"
-        [(ngModel)]="lastName"
-        name="lastName"
+        formControlName="lastName"
       ></ion-input>
+      <ion-text
+        color="danger"
+        *ngIf="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched"
+      >
+        <p class="text-xs ml-2 -mt-3">Last name is required</p>
+      </ion-text>
 
       <ion-input
         label="Email"
@@ -37,9 +47,7 @@
         label-placement="floating"
         type="email"
         placeholder="example@mail.com"
-        [disabled]="true"
-        [(ngModel)]="email"
-        name="email"
+        formControlName="email"
       ></ion-input>
 
       <ion-input
@@ -48,8 +56,7 @@
         label-placement="floating"
         type="tel"
         placeholder="Enter phone number"
-        [(ngModel)]="phone"
-        name="phone"
+        formControlName="phone"
       ></ion-input>
 
       <div class="mt-4 flex justify-start">
@@ -65,34 +72,48 @@
       <p class="text-sm text-gray-500">Update your account password</p>
     </div>
 
-    <form class="flex flex-col gap-4">
+    <form [formGroup]="passwordForm" class="flex flex-col gap-4">
       <ion-input
         label="Current Password"
         fill="outline"
         label-placement="floating"
         type="password"
         placeholder="Enter current password"
-        [(ngModel)]="currentPassword"
-        name="currentPassword"
+        formControlName="currentPassword"
       ></ion-input>
+      <ion-text
+        color="danger"
+        *ngIf="
+          passwordForm.get('currentPassword')?.invalid &&
+          passwordForm.get('currentPassword')?.touched
+        "
+      >
+        <p class="text-xs ml-2 -mt-3">Current password is required</p>
+      </ion-text>
+
       <ion-input
         label="New Password"
         fill="outline"
         label-placement="floating"
         type="password"
         placeholder="Enter new password"
-        [(ngModel)]="newPassword"
-        name="newPassword"
+        formControlName="newPassword"
       ></ion-input>
+      <ion-text color="danger" *ngIf="passwordError">
+        <p class="text-xs ml-2 -mt-3">{{ passwordError }}</p>
+      </ion-text>
+
       <ion-input
         label="Confirm Password"
         fill="outline"
         label-placement="floating"
         type="password"
         placeholder="Confirm new password"
-        [(ngModel)]="confirmPassword"
-        name="confirmPassword"
+        formControlName="confirmPassword"
       ></ion-input>
+      <ion-text color="danger" *ngIf="confirmPasswordError">
+        <p class="text-xs ml-2 -mt-3">{{ confirmPasswordError }}</p>
+      </ion-text>
 
       <div class="mt-4 flex justify-start">
         <ion-button color="primary" (click)="changePassword()"> Update Password </ion-button>

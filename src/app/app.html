@@ -1,10 +1,10 @@
 <main class="main flex flex-col min-h-screen relative">
-  @if (!authPage) {
+  @if (!authPage && authState() === 'logged-in') {
     <app-header />
   }
   <div class="relative flex-1">
     <ion-split-pane when="md" contentId="main" class="absolute inset-0">
-      @if (!authPage) {
+      @if (!authPage && authState() === 'logged-in') {
         <ion-menu menuId="main-menu" contentId="main" class="w-full md:w-[300px] h-full">
           <ion-content class="menu-content h-full">
             <app-sidebar />
@@ -12,9 +12,17 @@
         </ion-menu>
       }
 
-      <ion-content>
-        <router-outlet id="main"></router-outlet>
-      </ion-content>
+      @if (authState() === 'logging-in') {
+        <ion-content>
+          <div class="flex items-center justify-center h-full">
+            <ion-spinner name="crescent"></ion-spinner>
+          </div>
+        </ion-content>
+      } @else {
+        <ion-content>
+          <router-outlet id="main"></router-outlet>
+        </ion-content>
+      }
     </ion-split-pane>
   </div>
 </main>

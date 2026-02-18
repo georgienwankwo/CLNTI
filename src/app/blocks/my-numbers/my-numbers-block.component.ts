@@ -1,23 +1,37 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-  IonCol,
   IonGrid,
+  IonCol,
   IonRow,
+  IonSpinner,
   IonSelect,
   IonSelectOption,
 } from '@ionic/angular/standalone';
 import { Number } from './types';
+import { SmsService } from '../../core/services/sms.service';
+import { inject, OnInit } from '@angular/core';
 
 @Component({
   selector: 'my-numbers-block',
   templateUrl: './my-numbers-block.component.html',
   styleUrls: ['./my-numbers-block.component.scss'],
-  imports: [IonGrid, IonCol, IonRow, CommonModule, FormsModule, IonSelectOption, IonSelect],
+  imports: [
+    IonGrid,
+    IonCol,
+    IonRow,
+    CommonModule,
+    FormsModule,
+    IonSelectOption,
+    IonSelect,
+    IonSpinner,
+  ],
 })
-export class MyNumbersBlockComponent {
+export class MyNumbersBlockComponent implements OnInit {
   myNumbers: Array<Number> = [];
+  isLoading = signal(false);
+  private smsService = inject(SmsService);
 
   searchTerm = '';
   selectedStatus: 'all' | 'active' | 'expired' = 'all';
@@ -27,6 +41,33 @@ export class MyNumbersBlockComponent {
   totalNumbers = 0;
   startIndex = 0;
   endIndex = 0;
+
+  ngOnInit() {
+    this.loadNumbers();
+  }
+
+  loadNumbers() {
+    this.isLoading.set(true);
+    this.smsService.getHistory().subscribe({
+      next: (res) => {
+        this.myNumbers = res.data.map((item: any) => ({
+          id: item.id,
+          number: item.number,
+          country: item.countryCode,
+          status: item.status,
+          service: item.serviceId,
+          expires_at: item.createdAt, // Or calculate expiry
+          action: 'View SMS',
+          code: '',
+        }));
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading numbers', err);
+        this.isLoading.set(false);
+      },
+    });
+  }
 
   get count() {
     return this.myNumbers.length;

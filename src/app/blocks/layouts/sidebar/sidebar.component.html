@@ -89,13 +89,7 @@
     </ion-menu-toggle>
 
     <ion-menu-toggle autoHide="false">
-      <ion-item
-        lines="none"
-        menu-close
-        routerLink="/logout"
-        routerDirection="root"
-        [class.active]="isActive('/logout')"
-      >
+      <ion-item lines="none" (click)="logoutFn()" menu-close>
         <i class="ph ph-sign-out" slot="start"></i>
         <ion-label class="font-normal">Logout</ion-label>
       </ion-item>

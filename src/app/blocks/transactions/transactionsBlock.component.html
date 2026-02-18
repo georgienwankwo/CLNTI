@@ -4,9 +4,14 @@
       <p class="text-md font-medium text-gray-600">Transactions</p>
     </div>
   }
-  <div class="border border-gray-200 rounded-lg overflow-hidden">
+  <div class="border border-gray-200 rounded-lg overflow-hidden relative">
+    @if (isLoading()) {
+      <div class="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center z-10">
+        <p class="text-sm font-medium text-gray-600">Loading...</p>
+      </div>
+    }
     <div class="overflow-x-auto h-full">
-      @if (count === 0) {
+      @if (count === 0 && !isLoading()) {
         <div
           class="py-12 text-center text-gray-500 text-sm flex flex-col items-center justify-center gap-2 min-h-[300px]"
         >
@@ -53,6 +58,59 @@
             </ion-row>
           }
         </ion-grid>
+        <!-- Pagination Controls -->
+        <div
+          class="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6"
+        >
+          <div class="flex justify-between flex-1 sm:hidden">
+            <ion-button
+              (click)="prevPage()"
+              [disabled]="currentPage === 1"
+              fill="outline"
+              size="small"
+              >Previous</ion-button
+            >
+            <ion-button
+              (click)="nextPage()"
+              [disabled]="currentPage === totalPages"
+              fill="outline"
+              size="small"
+              >Next</ion-button
+            >
+          </div>
+          <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+            <div>
+              <p class="text-sm text-gray-700 font-medium">
+                Page {{ currentPage }} of {{ totalPages }} ({{ count }} total)
+              </p>
+            </div>
+            <div>
+              <nav
+                class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                aria-label="Pagination"
+              >
+                <ion-button
+                  (click)="prevPage()"
+                  [disabled]="currentPage === 1"
+                  fill="clear"
+                  size="small"
+                >
+                  <ion-icon name="chevron-back-outline"></ion-icon>
+                  Previous
+                </ion-button>
+                <ion-button
+                  (click)="nextPage()"
+                  [disabled]="currentPage === totalPages"
+                  fill="clear"
+                  size="small"
+                >
+                  Next
+                  <ion-icon name="chevron-forward-outline"></ion-icon>
+                </ion-button>
+              </nav>
+            </div>
+          </div>
+        </div>
       }
     </div>
   </div>
