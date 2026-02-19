@@ -110,7 +110,7 @@ export class RentNumbersPage implements OnInit {
 
   calculateTotal() {
     const service = this.filteredServices.find((s) => s.id === this.selectedService);
-    this.totalCost = service ? service.price : 0;
+    this.totalCost = service ? service.cost : 0;
   }
 
   confirmPurchase() {

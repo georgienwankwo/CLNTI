@@ -3,86 +3,90 @@
     <h1 class="md:!text-3xl text-2xl font-semibold">Rent Numbers</h1>
     <p class="text-sm text-gray-500 mt-1">Manage your personal details and account settings</p>
   </div>
-  <div class="mb-4">
-    <div class="sm:hidden">
-      <label for="tabs" class="sr-only">Select your country</label>
-      <ion-select
-        id="tabs"
-        [(ngModel)]="hostSelected"
-        interface="popover"
-        (ionChange)="setActiveHost($event.detail.value)"
-        class="w-[100%] sm:w-[150px] border border-gray-300 rounded-lg px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-      >
-        <ion-select-option *ngFor="let host of hosts; let i = index" [value]="host.id">{{
-          host.name
-        }}</ion-select-option>
-      </ion-select>
+  <div class="max-w-lg">
+    <div class="mb-4">
+      <div class="sm:hidden">
+        <label for="tabs" class="sr-only">Select your country</label>
+        <ion-select
+          id="tabs"
+          [(ngModel)]="hostSelected"
+          interface="popover"
+          (ionChange)="setActiveHost($event.detail.value)"
+          class="w-[100%] sm:w-[150px] border border-gray-300 rounded-lg px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+        >
+          <ion-select-option *ngFor="let host of hosts; let i = index" [value]="host.id">{{
+            host.name
+          }}</ion-select-option>
+        </ion-select>
+      </div>
+      <ul class="hidden text-sm font-medium text-center text-body sm:flex -space-x-px">
+        <li
+          *ngFor="let host of hosts; let i = index"
+          (click)="setActiveHost(host.id)"
+          [class.border-b-1.5]="hostSelected === host.id"
+          class="w-full focus-within:z-10 py-4 cursor-pointer"
+        >
+          <p href="#" class="text-md">
+            {{ host.name }}
+          </p>
+        </li>
+      </ul>
     </div>
-    <ul class="hidden text-sm font-medium text-center text-body sm:flex -space-x-px">
-      <li
-        *ngFor="let host of hosts; let i = index"
-        (click)="setActiveHost(host.id)"
-        [class.border-b-1.5]="hostSelected === host.id"
-        class="w-full focus-within:z-10 py-4 cursor-pointer"
-      >
-        <p href="#" class="text-md">
-          {{ host.name }}
-        </p>
-      </li>
-    </ul>
-  </div>
-  <div class="space-y-6">
-    @if (activeHost.requiresCountry) {
+    <div class="space-y-2">
+      @if (activeHost.requiresCountry) {
+        <ion-item class="rounded-lg border border-gray-200 overflow-hidden relative">
+          <ion-select
+            label="Country"
+            placeholder="Select Country"
+            [(ngModel)]="selectedCountry"
+            (ionChange)="onCountryChange()"
+            interface="popover"
+            class="w-full"
+          >
+            <ion-select-option *ngFor="let country of filteredCountries" [value]="country.code">
+              {{ country.name }}
+            </ion-select-option>
+          </ion-select>
+          @if (isLoading() && !selectedCountry) {
+            <div class="absolute right-10 top-1/2 -translate-y-1/2">
+              <ion-spinner name="crescent" size="small"></ion-spinner>
+            </div>
+          }
+        </ion-item>
+      }
       <ion-item class="rounded-lg border border-gray-200 overflow-hidden relative">
         <ion-select
-          label="Country"
-          placeholder="Select Country"
-          [(ngModel)]="selectedCountry"
-          (ionChange)="onCountryChange()"
+          label="Service"
+          placeholder="Select Service"
+          [(ngModel)]="selectedService"
+          (ionChange)="calculateTotal()"
           interface="popover"
           class="w-full"
+          [disabled]="filteredServices.length < 1"
         >
-          <ion-select-option *ngFor="let country of filteredCountries" [value]="country.code">
-            {{ country.name }}
+          <ion-select-option *ngFor="let service of filteredServices" [value]="service.id">
+            {{ service.name }} - {{ service.cost | currency: 'NGN' : 'symbol-narrow' : '1.0-2' }}
           </ion-select-option>
         </ion-select>
-        @if (isLoading() && !selectedCountry) {
+        @if (isLoading() && selectedCountry && filteredServices.length === 0) {
           <div class="absolute right-10 top-1/2 -translate-y-1/2">
             <ion-spinner name="crescent" size="small"></ion-spinner>
           </div>
         }
       </ion-item>
-    }
-    <ion-item class="rounded-lg border border-gray-200 overflow-hidden relative">
-      <ion-select
-        label="Service"
-        placeholder="Select Service"
-        [(ngModel)]="selectedService"
-        (ionChange)="calculateTotal()"
-        interface="popover"
-        class="w-full"
-        [disabled]="filteredServices.length < 1"
-      >
-        <ion-select-option *ngFor="let service of filteredServices" [value]="service.id">
-          {{ service.name }} - ₦{{ service.price }}
-        </ion-select-option>
-      </ion-select>
-      @if (isLoading() && selectedCountry && filteredServices.length === 0) {
-        <div class="absolute right-10 top-1/2 -translate-y-1/2">
-          <ion-spinner name="crescent" size="small"></ion-spinner>
+      @if (totalCost > 0) {
+        <div class="py-6">
+          <p class="text-gray-600 text-sm">Total Cost</p>
+          <p class="text-3xl font-semibold text-gray-900">
+            {{ totalCost | currency: 'NGN' : 'symbol-narrow' : '1.0-2' }}
+          </p>
+        </div>
+        <div class="max-w-md">
+          <ion-button expand="block" color="primary" (click)="confirmPurchase()"
+            >Rent Number</ion-button
+          >
         </div>
       }
-    </ion-item>
-    @if (totalCost > 0) {
-      <div class="py-6">
-        <p class="text-gray-600 text-sm">Total Cost</p>
-        <p class="text-3xl font-semibold text-gray-900">₦{{ totalCost }}</p>
-      </div>
-      <div class="max-w-md">
-        <ion-button expand="block" color="primary" (click)="confirmPurchase()"
-          >Rent Number</ion-button
-        >
-      </div>
-    }
+    </div>
   </div>
 </main>
