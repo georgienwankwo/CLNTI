@@ -18,7 +18,7 @@
           </div>
           <div class="w-full">
             <p class="text-4xl font-semibold">
-              <span class="text-lg font-medium">₦</span>{{ currentBalance }}
+              <span class="text-lg font-medium">₦</span>{{ currentBalance | number: '1.2-2' }}
             </p>
           </div>
         </div>
@@ -43,9 +43,63 @@
     >
       <ion-select-option value="NGN">NGN - Nigerian Naira</ion-select-option>
     </ion-select>
-    <div class="mt-6 max-w-md">
-      <ion-button color="primary" expand="block" (click)="payWithPaystack()">
-        Pay using Paystack
+    <div class="mt-6 max-w-md space-y-4">
+      <!-- File selection -->
+      <div class="flex flex-col gap-4">
+        <label class="block text-sm font-medium text-gray-700">Proof of Payment</label>
+
+        <input
+          #fileInput
+          type="file"
+          class="hidden"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+        />
+
+        <div
+          class="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center transition-colors bg-gray-50"
+          [class.cursor-pointer]="!previewUrl()"
+          [class.hover:border-primary]="!previewUrl()"
+          (click)="!previewUrl() && fileInput.click()"
+        >
+          <div *ngIf="!previewUrl()" class="text-center">
+            <p class="text-gray-500">Click to select screenshot/receipt</p>
+            <p class="text-xs text-gray-400 mt-1">PNG, JPG, WEBP (max 5MB)</p>
+          </div>
+          <div *ngIf="previewUrl()" class="w-full flex flex-col items-center">
+            <img [src]="previewUrl()" class="max-h-48 rounded-md mb-2 object-contain" />
+            <p class="text-xs text-primary font-medium mb-4">{{ selectedFile?.name }}</p>
+
+            <div class="flex gap-2 w-full mt-8">
+              <ion-button
+                fill="outline"
+                size="small"
+                class="flex-1 text-xs"
+                (click)="fileInput.click()"
+              >
+                Replace
+              </ion-button>
+              <ion-button
+                fill="outline"
+                color="danger"
+                size="small"
+                class="flex-1 text-xs"
+                (click)="removeFile()"
+              >
+                Remove
+              </ion-button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ion-button
+        color="primary"
+        expand="block"
+        (click)="uploadProof()"
+        [disabled]="!amountToAdd || !selectedFile"
+      >
+        Upload Proof of Payment
       </ion-button>
     </div>
   </div>

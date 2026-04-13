@@ -22,12 +22,26 @@ export class TransactionService {
     this.historyCache.clear();
     return from(this.authService.getToken()).pipe(
       switchMap((token) => {
-        console.log({ token });
         return this.http.post(
           `${this.apiUrl}/initialize`,
           { amount, email },
           { headers: { Authorization: `Bearer ${token}` } },
         );
+      }),
+    );
+  }
+
+  uploadProofOfPayment(amount: number, file: File): Observable<any> {
+    this.historyCache.clear();
+    return from(this.authService.getToken()).pipe(
+      switchMap((token) => {
+        const formData = new FormData();
+        formData.append('amount', amount.toString());
+        formData.append('file', file);
+
+        return this.http.post(`${this.apiUrl}/upload-proof`, formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
       }),
     );
   }

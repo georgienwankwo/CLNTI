@@ -1,4 +1,6 @@
-<ion-header class="pt-4 md:pt-1 pl-4 pb-2 md:pb-0.5 pr-4 ion-no-border border-b-1 border-gray-200">
+<ion-header
+  class="pt-1.5 md:pt-1 pl-1 md:pl-4 pb-1 md:pb-0.5 pr-4 ion-no-border border-b-1 border-gray-200"
+>
   <div class="flex justify-between">
     <ion-toolbar class="w-fit">
       <div class="w-fit flex flex-row gap-2">
@@ -11,7 +13,12 @@
     </ion-toolbar>
     <ion-toolbar class="w-fit">
       <div class="w-fit flex flex-row gap-2 h-fit">
-        <ion-item lines="none" [routerLink]="['/profile']" routerDirection="root">
+        <ion-item
+          lines="none"
+          [routerLink]="['/profile']"
+          routerDirection="root"
+          class="profile-btn"
+        >
           <i class="ph ph-user-circle" slot="start"></i>
         </ion-item>
       </div>

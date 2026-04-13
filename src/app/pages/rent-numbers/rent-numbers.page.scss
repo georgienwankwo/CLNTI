@@ -1,0 +1,517 @@
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Card ── */
+.card {
+  background: var(--md-surface-container);
+  border-radius: var(--radius-sm);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.segment-wrap {
+  background: var(--md-surface-container-high);
+  border-radius: var(--radius-sm);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  padding: 10px 8px 16px 8px;
+  display: flex;
+  gap: 2px;
+  margin-bottom: 0px;
+}
+.segment-tab {
+  flex: 1;
+  padding: 12px 12px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--md-on-surface-variant);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+.segment-tab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: transparent;
+  transition: background 0.15s;
+}
+.segment-tab:hover::before {
+  background: var(--md-state-hover);
+}
+.segment-tab:active::before {
+  background: var(--md-state-pressed);
+}
+.segment-tab.active {
+  background: var(--md-surface);
+  color: var(--md-primary);
+  box-shadow:
+    0 1px 3px var(--md-shadow),
+    0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Field Label ── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--md-on-surface-variant);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding-left: 4px;
+}
+
+/* ── Select Trigger ── */
+.select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--md-surface);
+  border: 1.5px solid var(--md-outline-variant);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+.select-trigger::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  transition: background 0.15s;
+}
+.select-trigger:hover {
+  border-color: var(--md-primary);
+  box-shadow: 0 0 0 0px var(--md-primary-container);
+}
+.select-trigger:hover::before {
+  background: var(--md-state-hover);
+}
+.select-trigger:active::before {
+  background: var(--md-state-pressed);
+}
+.select-trigger.selected {
+  border-color: var(--md-primary);
+}
+.select-trigger.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.select-trigger .label-text {
+  font-size: 12px;
+  color: var(--md-on-surface);
+}
+.select-trigger .placeholder-text {
+  font-size: 15px;
+  color: var(--md-on-surface-variant);
+}
+.select-trigger .chevron {
+  font-size: 14px;
+  color: var(--md-on-surface-variant);
+  transition: transform 0.2s cubic-bezier(0.05, 0.7, 0.1, 1);
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+.select-trigger.open .chevron {
+  transform: rotate(180deg);
+}
+
+/* ── Leading icon inside trigger ── */
+.trigger-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.trigger-icon {
+  font-size: 14px;
+  color: var(--md-primary);
+  flex-shrink: 0;
+}
+.trigger-icon.muted {
+  color: var(--md-on-surface-variant);
+}
+
+/* ── Divider ── */
+.divider {
+  height: 1px;
+  background: var(--md-outline-variant);
+  margin: 4px 0;
+  opacity: 0.6;
+}
+
+/* ── Cost Section ── */
+.cost-section {
+  background: var(--md-primary-container);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  animation: scaleIn 0.3s cubic-bezier(0.05, 0.7, 0.1, 1) both;
+}
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.cost-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--md-on-primary-container);
+  opacity: 0.75;
+}
+.cost-amount {
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--md-on-primary-container);
+  letter-spacing: -0.5px;
+  margin-top: 2px;
+}
+.cost-badge {
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+/* ── Loading State ── */
+.loading-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 0;
+  width: 100%;
+}
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid var(--md-outline-variant);
+  border-top-color: var(--md-primary);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.loading-row span {
+  font-size: 14px;
+  color: var(--md-on-surface-variant);
+}
+
+/* ── FAB-style Button ── */
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 16px 24px;
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition:
+    box-shadow 0.2s,
+    background 0.15s,
+    transform 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  transition: background 0.15s;
+}
+.btn-primary:hover {
+  box-shadow: 0 2px 8px rgba(103, 80, 164, 0.35);
+}
+.btn-primary:hover::before {
+  background: rgba(255, 255, 255, 0.08);
+}
+.btn-primary:active {
+  transform: scale(0.98);
+}
+.btn-primary:active::before {
+  background: rgba(255, 255, 255, 0.15);
+}
+.btn-primary .material-icons-round {
+  font-size: 18px;
+}
+
+/* ── Modal Overlay ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  backdrop-filter: blur(2px);
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-sheet {
+  width: 100%;
+  max-width: 560px;
+  height: 78vh;
+  background: var(--md-surface);
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.modal-sheet-wrapper {
+  width: 100%;
+  max-width: 560px;
+  height: 78vh;
+  padding: 0px 20px;
+}
+
+.modal-overlay.open .modal-sheet {
+  opacity: 1;
+}
+
+/* Modal Header */
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  flex-shrink: 0;
+}
+.sheet-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--md-on-surface);
+}
+.icon-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--md-on-surface-variant);
+  transition: background 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.icon-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  transition: background 0.15s;
+}
+.icon-btn:hover::before {
+  background: rgba(0, 0, 0, 0.08);
+}
+.icon-btn:active::before {
+  background: rgba(0, 0, 0, 0.14);
+}
+.icon-btn .material-icons-round {
+  font-size: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Search bar */
+.sheet-search {
+  padding: 0 16px 12px;
+  flex-shrink: 0;
+}
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--md-surface-container-high);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+}
+.search-field .material-icons-round {
+  font-size: 20px;
+  color: var(--md-on-surface-variant);
+  flex-shrink: 0;
+}
+.search-field input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: 'Google Sans', sans-serif;
+  font-size: 14px;
+  color: var(--md-on-surface);
+  outline: none;
+}
+.search-field input::placeholder {
+  color: var(--md-on-surface-variant);
+}
+
+/* List */
+.sheet-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 4px 0 16px;
+}
+.sheet-list::-webkit-scrollbar {
+  width: 4px;
+}
+.sheet-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sheet-list::-webkit-scrollbar-thumb {
+  background: var(--md-outline-variant);
+  border-radius: 4px;
+}
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 20px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.12s;
+}
+.list-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  transition: background 0.12s;
+}
+.list-item:hover::before {
+  background: var(--md-state-hover);
+}
+.list-item:active::before {
+  background: var(--md-state-pressed);
+}
+.list-item-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--md-secondary-container);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.list-item-icon .material-icons-round {
+  font-size: 18px;
+  color: var(--md-secondary);
+}
+.list-item-text {
+  flex: 1;
+  min-width: 0;
+}
+.list-item-primary {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--md-on-surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.list-item-secondary {
+  font-size: 12px;
+  color: var(--md-on-surface-variant);
+  margin-top: 1px;
+}
+.list-item-check {
+  font-size: 20px;
+  color: var(--md-primary);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.list-item.selected .list-item-check {
+  opacity: 1;
+}
+.list-item.selected {
+  background: var(--md-state-hover);
+}
+.list-divider {
+  height: 1px;
+  background: var(--md-outline-variant);
+  margin: 4px 20px;
+  opacity: 0.4;
+}
+.cost-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 273px;
+  background: var(--md-surface-container);
+  border-radius: var(--radius-sm);
+}

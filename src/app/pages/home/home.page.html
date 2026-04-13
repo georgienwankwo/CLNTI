@@ -21,7 +21,7 @@
             </div>
             <div class="w-full">
               <p class="text-4xl font-semibold">
-                <span class="text-lg font-medium">₦</span>{{ balance() }}
+                <span class="text-lg font-medium">₦</span>{{ balance() | number: '1.2-2' }}
               </p>
             </div>
           </div>
@@ -38,7 +38,7 @@
               <p>Total Numbers</p>
             </div>
             <div class="w-full">
-              <p class="text-4xl font-semibold">0</p>
+              <p class="text-4xl font-semibold">{{ totalNumbers() }}</p>
             </div>
           </div>
         </div>
@@ -54,7 +54,7 @@
               <p>SMS Received</p>
             </div>
             <div class="w-full">
-              <p class="text-4xl font-semibold">0</p>
+              <p class="text-4xl font-semibold">{{ totalSms() }}</p>
             </div>
           </div>
         </div>
@@ -70,7 +70,10 @@
               <p>Total Purchased</p>
             </div>
             <div class="w-full">
-              <p class="text-4xl font-semibold">0</p>
+              <p class="text-4xl font-semibold">
+                <span class="text-lg font-medium">₦</span
+                >{{ totalPurchases().amount | number: '1.2-2' }}
+              </p>
             </div>
           </div>
         </div>

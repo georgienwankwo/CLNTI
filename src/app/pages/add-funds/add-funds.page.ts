@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonInput, IonButton, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
 import { ToastController, LoadingController } from '@ionic/angular';
@@ -18,7 +18,8 @@ export class AddFundsPage implements OnInit {
   currency = 'NGN';
   email = '';
   amountToAdd: number | null = null;
-  paystackPublicKey = environment.paystackPublicKey;
+  selectedFile: File | null = null;
+  previewUrl = signal<string | null>(null);
 
   private authService = inject(AuthService);
   private transactionService = inject(TransactionService);
@@ -39,36 +40,65 @@ export class AddFundsPage implements OnInit {
     });
   }
 
-  async payWithPaystack() {
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        this.showToast('Please select an image file.', 'warning');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        this.showToast('File size should be less than 5MB.', 'warning');
+        return;
+      }
+
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl.set(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  async uploadProof() {
     if (!this.amountToAdd || this.amountToAdd <= 0) {
       this.showToast('Please enter a valid amount.', 'warning');
       return;
     }
+    if (!this.selectedFile) {
+      this.showToast('Please select a proof of payment screenshot.', 'warning');
+      return;
+    }
 
     const loading = await this.loadingController.create({
-      message: 'Initializing payment...',
+      message: 'Uploading proof of payment...',
     });
     await loading.present();
 
-    this.transactionService.initializeTransaction(this.amountToAdd, this.email).subscribe({
-      next: async (data) => {
+    this.transactionService.uploadProofOfPayment(this.amountToAdd, this.selectedFile).subscribe({
+      next: async (res) => {
         await loading.dismiss();
-
-        window.location.href = `https://checkout.paystack.com/${data.access_code}`;
+        this.showToast('Proof uploaded! Admin will verify and credit your balance.', 'success');
+        this.resetForm();
       },
       error: async (err) => {
         await loading.dismiss();
-        console.error('Error initializing payment', err);
-        this.showToast('Failed to initialize payment. Please try again.', 'danger');
+        console.error('Error uploading proof', err);
+        this.showToast(err.error?.message || 'Failed to upload proof. Please try again.', 'danger');
       },
     });
   }
 
-  async handlePaymentSuccess(response: any) {
-    this.showToast(`Payment successful! Your balance will be updated shortly.`, 'success');
+  resetForm() {
     this.amountToAdd = null;
-    // Refresh balance after a short delay to allow webhook processing
-    setTimeout(() => this.loadUserProfile(), 3000);
+    this.selectedFile = null;
+    this.previewUrl.set(null);
+  }
+
+  removeFile() {
+    this.selectedFile = null;
+    this.previewUrl.set(null);
   }
 
   async showToast(message: string, color: 'success' | 'warning' | 'danger') {

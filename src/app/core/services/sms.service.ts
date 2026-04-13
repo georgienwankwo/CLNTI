@@ -13,7 +13,6 @@ export interface SmsCountry {
 export interface SmsServiceItem {
   id: string;
   name: string;
-  price: number;
 }
 
 @Injectable({
@@ -27,24 +26,45 @@ export class SmsService {
     return `${environment.apiUrl}/sms`;
   }
 
-  getCountries(server: string): Observable<any> {
+  getServerStatus(): Observable<any> {
+    return from(this.authService.getToken()).pipe(
+      switchMap((token) => {
+        return this.http.get(`${this.apiUrl}/server-status`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }),
+    );
+  }
+
+  getCountries(
+    server: string,
+    page: number = 1,
+    limit: number = 50,
+    search: string = '',
+  ): Observable<any> {
     return from(this.authService.getToken()).pipe(
       switchMap((token) => {
         return this.http.post(
           `${this.apiUrl}/countries`,
-          { server },
+          { server, page, limit, search },
           { headers: { Authorization: `Bearer ${token}` } },
         );
       }),
     );
   }
 
-  getServices(server: string, country: string): Observable<any> {
+  getServices(
+    server: string,
+    country: string,
+    page: number = 1,
+    limit: number = 50,
+    search: string = '',
+  ): Observable<any> {
     return from(this.authService.getToken()).pipe(
       switchMap((token) => {
         return this.http.post(
           `${this.apiUrl}/services`,
-          { server, country },
+          { server, country, page, limit, search },
           { headers: { Authorization: `Bearer ${token}` } },
         );
       }),

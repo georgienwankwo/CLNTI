@@ -6,6 +6,7 @@ import { HeaderComponent } from './blocks/layouts/header/header.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './core/services/auth.service';
+import 'flag-icons/css/flag-icons.min.css';
 
 @Component({
   selector: 'app-root',

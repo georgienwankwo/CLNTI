@@ -3,90 +3,252 @@
     <h1 class="md:!text-3xl text-2xl font-semibold">Rent Numbers</h1>
     <p class="text-sm text-gray-500 mt-1">Manage your personal details and account settings</p>
   </div>
-  <div class="max-w-lg">
-    <div class="mb-4">
-      <div class="sm:hidden">
-        <label for="tabs" class="sr-only">Select your country</label>
-        <ion-select
-          id="tabs"
-          [(ngModel)]="hostSelected"
-          interface="popover"
-          (ionChange)="setActiveHost($event.detail.value)"
-          class="w-[100%] sm:w-[150px] border border-gray-300 rounded-lg px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-        >
-          <ion-select-option *ngFor="let host of hosts; let i = index" [value]="host.id">{{
-            host.name
-          }}</ion-select-option>
-        </ion-select>
-      </div>
-      <ul class="hidden text-sm font-medium text-center text-body sm:flex -space-x-px">
-        <li
-          *ngFor="let host of hosts; let i = index"
-          (click)="setActiveHost(host.id)"
-          [class.border-b-1.5]="hostSelected === host.id"
-          class="w-full focus-within:z-10 py-4 cursor-pointer"
-        >
-          <p href="#" class="text-md">
-            {{ host.name }}
-          </p>
-        </li>
-      </ul>
-    </div>
-    <div class="space-y-2">
-      @if (activeHost.requiresCountry) {
-        <ion-item class="rounded-lg border border-gray-200 overflow-hidden relative">
-          <ion-select
-            label="Country"
-            placeholder="Select Country"
-            [(ngModel)]="selectedCountry"
-            (ionChange)="onCountryChange()"
-            interface="popover"
-            class="w-full"
+  <div class="md:max-w-lg">
+    @if (!isHostsLoading()) {
+      <div class="mb-0">
+        <div class="segment-wrap" id="segmentWrap">
+          <button
+            *ngFor="let host of hosts()"
+            [class.active]="hostSelected() === host.name"
+            class="segment-tab"
+            (click)="setActiveHost(host.name)"
           >
-            <ion-select-option *ngFor="let country of filteredCountries" [value]="country.code">
-              {{ country.name }}
-            </ion-select-option>
-          </ion-select>
-          @if (isLoading() && !selectedCountry) {
-            <div class="absolute right-10 top-1/2 -translate-y-1/2">
-              <ion-spinner name="crescent" size="small"></ion-spinner>
+            {{ host.name }}
+          </button>
+        </div>
+      </div>
+      <div class="space-y-4">
+        <div class="card">
+          <!-- Country -->
+          <div class="field">
+            <span class="field-label">Country</span>
+            <div class="select-trigger" id="countryTrigger" (click)="toggleCountryModal()">
+              <div class="trigger-inner">
+                <span class="material-icons-round trigger-icon muted">
+                  @if (selectedCountry()) {
+                    <span class="fi fi-{{ countryToAlpha(selectedCountryName()) }}"></span>
+                  } @else {
+                    <i class="ph ph-globe"></i>
+                  }
+                </span>
+                <span class="placeholder-text" id="countryLabel">{{
+                  selectedCountryName() || 'Select Country'
+                }}</span>
+              </div>
+              <span class="material-icons-round chevron"><i class="ph ph-caret-down"></i></span>
+            </div>
+          </div>
+
+          <!-- Service -->
+          <div class="field">
+            <span class="field-label">Service</span>
+            <div
+              class="select-trigger {{
+                !selectedCountry() || filteredServices().length === 0 ? 'disabled' : ''
+              }}"
+              id="serviceTrigger"
+              (click)="toggleServiceModal()"
+            >
+              <div class="trigger-inner">
+                <span class="material-icons-round trigger-icon muted">
+                  <i class="ph ph-chat-circle"></i>
+                </span>
+                <span class="placeholder-text" id="serviceLabel">
+                  {{ selectedServiceName() || 'Select Service' }}
+                </span>
+              </div>
+              <span class="material-icons-round chevron"><i class="ph ph-caret-down"></i></span>
+            </div>
+          </div>
+
+          <!-- Cost / CTA -->
+
+          @if (isCalculatingTotal()) {
+            <div class="py-6 flex flex-col items-center">
+              <ion-spinner name="crescent" color="primary"></ion-spinner>
+              <p class="text-xs text-gray-500 mt-2">Fetching price...</p>
+            </div>
+          } @else if (totalCost() > 0) {
+            <div class="divider"></div>
+            <div id="costArea">
+              <!-- Price & Purchase -->
+              <div class="cost-section">
+                <div>
+                  <div class="cost-label">Total Cost</div>
+                  <div class="cost-amount">
+                    {{ totalCost() | currency: 'NGN' : 'symbol-narrow' : '1.0-2' }}
+                  </div>
+                </div>
+                <div class="cost-badge">Best Price</div>
+              </div>
+              <div style="margin-top: 14px">
+                <ion-button expand="block" color="primary" (click)="confirmPurchase()"
+                  >Rent Number</ion-button
+                >
+              </div>
             </div>
           }
-        </ion-item>
-      }
-      <ion-item class="rounded-lg border border-gray-200 overflow-hidden relative">
-        <ion-select
-          label="Service"
-          placeholder="Select Service"
-          [(ngModel)]="selectedService"
-          (ionChange)="calculateTotal()"
-          interface="popover"
-          class="w-full"
-          [disabled]="filteredServices.length < 1"
-        >
-          <ion-select-option *ngFor="let service of filteredServices" [value]="service.id">
-            {{ service.name }} - {{ service.cost | currency: 'NGN' : 'symbol-narrow' : '1.0-2' }}
-          </ion-select-option>
-        </ion-select>
-        @if (isLoading() && selectedCountry && filteredServices.length === 0) {
-          <div class="absolute right-10 top-1/2 -translate-y-1/2">
-            <ion-spinner name="crescent" size="small"></ion-spinner>
+        </div>
+      </div>
+    } @else {
+      <div class="cost-loading">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+    }
+  </div>
+
+  <!-- Country Modal -->
+  <div class="modal-overlay" [class.open]="isCountryModalOpen()" (click)="toggleCountryModal()">
+    <div class="modal-sheet-wrapper" (click)="$event.stopPropagation()">
+      <div class="modal-sheet">
+        <div class="sheet-header">
+          <span class="sheet-title">Select Country</span>
+
+          <button class="icon-btn" (click)="toggleCountryModal()">
+            <span class="material-icons-round">
+              <i class="ph ph-x"></i>
+            </span>
+          </button>
+        </div>
+
+        <div class="sheet-search">
+          <div class="search-field">
+            <span class="material-icons-round">
+              <i class="ph ph-magnifying-glass"></i>
+            </span>
+            <input
+              type="text"
+              placeholder="Search countries…"
+              #countryInput
+              [(ngModel)]="countrySearchTerm"
+              (input)="onCountrySearch(countryInput.value)"
+            />
           </div>
-        }
-      </ion-item>
-      @if (totalCost > 0) {
-        <div class="py-6">
-          <p class="text-gray-600 text-sm">Total Cost</p>
-          <p class="text-3xl font-semibold text-gray-900">
-            {{ totalCost | currency: 'NGN' : 'symbol-narrow' : '1.0-2' }}
-          </p>
         </div>
-        <div class="max-w-md">
-          <ion-button expand="block" color="primary" (click)="confirmPurchase()"
-            >Rent Number</ion-button
-          >
+
+        <div class="sheet-list">
+          <div *ngFor="let country of filteredCountries(); let i = index">
+            <div *ngIf="i > 0" class="list-divider"></div>
+
+            <div
+              class="list-item"
+              [class.selected]="selectedCountry() === country.code"
+              (click)="selectCountry(country)"
+            >
+              <div class="list-item-icon">
+                <span class="material-icons-round">
+                  <span class="fi fi-{{ countryToAlpha(country.name) }}"></span>
+                </span>
+              </div>
+
+              <div class="list-item-text">
+                <div class="list-item-primary">
+                  {{ country.name }}
+                </div>
+
+                <div class="list-item-secondary">
+                  {{ countryToAlpha(country.name) || 'N/A' }}
+                </div>
+              </div>
+
+              <span class="material-icons-round list-item-check">
+                <span class="fa fa-check"></span>
+              </span>
+            </div>
+          </div>
+
+          <!-- loading -->
+          <div *ngIf="isLoading()" class="loading-row">
+            <div class="spinner"></div>
+            <span>Loading countries…</span>
+          </div>
+
+          <!-- infinite scroll -->
+          <div *ngIf="hasMoreCountries() && !isLoading()" style="padding: 16px; text-align: center">
+            <button (click)="loadMoreCountries($event)">
+              Load more
+              <i class="ph ph-caret-down"></i>
+            </button>
+          </div>
         </div>
-      }
+      </div>
+    </div>
+  </div>
+
+  <!-- Service Modal -->
+  <div class="modal-overlay" [class.open]="isServiceModalOpen()" (click)="toggleServiceModal()">
+    <div class="modal-sheet-wrapper" (click)="$event.stopPropagation()">
+      <div class="modal-sheet">
+        <div class="sheet-header">
+          <span class="sheet-title">Select Service</span>
+
+          <button class="icon-btn" (click)="toggleServiceModal()">
+            <span class="material-icons-round">
+              <i class="ph ph-x"></i>
+            </span>
+          </button>
+        </div>
+
+        <div class="sheet-search">
+          <div class="search-field">
+            <span class="material-icons-round">
+              <i class="ph ph-magnifying-glass"></i>
+            </span>
+            <input
+              type="text"
+              placeholder="Search services…"
+              #serviceInput
+              (input)="onServiceSearch(serviceInput.value)"
+            />
+          </div>
+        </div>
+
+        <div class="sheet-list">
+          <div *ngFor="let service of filteredServices(); let i = index">
+            <div *ngIf="i > 0" class="list-divider"></div>
+
+            <div
+              class="list-item"
+              [class.selected]="selectedService() === service.id"
+              (click)="selectService(service)"
+            >
+              <div class="list-item-icon">
+                <span class="material-icons-round">
+                  <i class="ph ph-chat-circle"></i>
+                </span>
+              </div>
+
+              <div class="list-item-text">
+                <div class="list-item-primary">
+                  {{ service.name }}
+                </div>
+
+                <div class="list-item-secondary">
+                  {{ service.code }}
+                </div>
+              </div>
+
+              <span class="material-icons-round list-item-check">
+                <span class="fa fa-check"></span>
+              </span>
+            </div>
+          </div>
+
+          <!-- loading -->
+          <div *ngIf="isLoading()" class="loading-row">
+            <div class="spinner"></div>
+            <span>Loading services…</span>
+          </div>
+
+          <!-- infinite scroll -->
+          <div *ngIf="hasMoreServices() && !isLoading()" style="padding: 16px; text-align: center">
+            <button (click)="loadMoreServices($event)">
+              Load more
+              <i class="ph ph-caret-down"></i>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </main>
