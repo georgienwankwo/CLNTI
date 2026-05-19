@@ -24,6 +24,7 @@ import {
 import { addIcons } from 'ionicons';
 import { chevronDownOutline } from 'ionicons/icons';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Router } from '@angular/router';
 import { SmsService } from '../../core/services/sms.service';
 
 @Component({
@@ -71,6 +72,7 @@ export class RentNumbersPage implements OnInit {
   selectedService = signal('');
   selectedServiceName = signal('');
   totalCost = signal(0);
+  currencyCode = signal('NGN');
   isCalculatingTotal = signal(false);
 
   countryPage = signal(1);
@@ -90,12 +92,10 @@ export class RentNumbersPage implements OnInit {
   filteredCountries = signal<any[]>([]);
   filteredServices = signal<any[]>([]);
   isLoading = signal(false);
-  isHostsLoading = signal(true);
+  isHostsLoading = signal(false);
 
   ngOnInit() {
-    console.log(`loading`);
     this.loadHosts();
-    console.log(`loading3`);
 
     this.countrySearchSubject.pipe(debounceTime(400), distinctUntilChanged()).subscribe((term) => {
       this.countrySearchTerm.set(term);
@@ -111,7 +111,6 @@ export class RentNumbersPage implements OnInit {
   }
 
   loadHosts() {
-    console.log(`loading2`);
     this.isLoading.set(true);
     this.smsService.getServerStatus().subscribe({
       next: (res: { success: boolean; message: string; data: Record<string, boolean> }) => {
@@ -119,11 +118,14 @@ export class RentNumbersPage implements OnInit {
           .map(([name, status]) => ({ name, status }))
           .sort((a, b) => Number(a.name) - Number(b.name));
         this.hosts.set(data);
-        if (data.length > 0) {
-          this.isLoading.set(false);
-          this.hostSelected.set(data[0].name);
-          this.loadCountries();
-        }
+        this.isLoading.set(false);
+        // this.hostSelected.set(data[0].name);
+        this.loadCountries();
+        // if (data.length > 0) {
+        //   this.isLoading.set(false);
+        //   this.hostSelected.set(data[0].name);
+        //   this.loadCountries();
+        // }
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -145,6 +147,7 @@ export class RentNumbersPage implements OnInit {
     this.selectedService.set('');
     this.selectedServiceName.set('');
     this.totalCost.set(0);
+    this.currencyCode.set('NGN');
     this.resetCountryPagination();
     this.resetServicePagination();
     this.serviceSearchTerm.set('');
@@ -181,7 +184,7 @@ export class RentNumbersPage implements OnInit {
           this.filteredCountries.set([...this.filteredCountries(), ...res.data]);
           this.hasMoreCountries.set(this.filteredCountries().length < res.pagination.total);
           this.isLoading.set(false);
-          this.isHostsLoading.set(false);
+          // this.isHostsLoading.set(false);
         },
         error: (err) => {
           console.error(err);
@@ -252,12 +255,14 @@ export class RentNumbersPage implements OnInit {
       .subscribe({
         next: (res) => {
           this.totalCost.set(res.data.price);
+          this.currencyCode.set(res.data.currency || 'NGN');
           this.isCalculatingTotal.set(false);
         },
         error: (err) => {
           console.error(err);
           this.isCalculatingTotal.set(false);
           this.totalCost.set(0);
+          this.currencyCode.set('NGN');
         },
       });
   }
@@ -270,19 +275,28 @@ export class RentNumbersPage implements OnInit {
     this.isServiceModalOpen.set(!this.isServiceModalOpen());
   }
 
+  private router = inject(Router);
+
   confirmPurchase() {
     this.isLoading.set(true);
     this.smsService
-      .purchaseNumber(this.hostSelected(), this.selectedService(), this.selectedCountry())
+      .purchaseNumber(
+        this.hostSelected(),
+        this.selectedService(),
+        this.selectedCountry(),
+        this.selectedCountryName(),
+        this.selectedServiceName(),
+      )
       .subscribe({
         next: (res) => {
           console.log('Purchase successful:', res.data);
           this.isLoading.set(false);
-          // Redirect or show success
+          this.router.navigate(['/my-numbers'], { queryParams: { highlight: res.data.id } });
         },
         error: (err) => {
           console.error('Purchase failed:', err);
           this.isLoading.set(false);
+          alert(err.message || 'Failed to purchase number');
         },
       });
   }

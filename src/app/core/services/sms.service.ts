@@ -83,12 +83,18 @@ export class SmsService {
     );
   }
 
-  purchaseNumber(server: string, service: string, country: string): Observable<any> {
+  purchaseNumber(
+    server: string,
+    service: string,
+    country: string,
+    countryName: string,
+    serviceName: string,
+  ): Observable<any> {
     return from(this.authService.getToken()).pipe(
       switchMap((token) => {
         return this.http.post(
           `${this.apiUrl}/purchase`,
-          { server, service, country },
+          { server, service, country, countryName, serviceName },
           { headers: { Authorization: `Bearer ${token}` } },
         );
       }),

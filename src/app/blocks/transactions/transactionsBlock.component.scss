@@ -1,6 +1,16 @@
 i.ph {
-  font-size: 80px;
-  color: var(--ion-color-medium);
+  font-size: 20px;
   text-align: center;
-  margin-right: 10px;
+}
+
+.search i.ph {
+  color: gray;
+}
+
+.refresh i.ph {
+  color: white;
+}
+
+.search-input i.ph {
+  color: #c4c4c4;
 }

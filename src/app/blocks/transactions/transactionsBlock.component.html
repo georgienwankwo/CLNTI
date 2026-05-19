@@ -1,7 +1,33 @@
 <section class="mt-4">
-  @if (!hideTitle) {
-    <div class="mb-4">
+  <div class="flex items-center flex-row justify-between">
+    @if (!hideTitle) {
       <p class="text-md font-medium text-gray-600">Transactions</p>
+    } @else {
+      <div></div>
+    }
+  </div>
+  @if (!hideToolbar) {
+    <div class="mb-4 flex items-center gap-3 flex-wrap justify-between w-full">
+      <div class="flex items-center gap-3 flex-wrap w-[0] grow-1">
+        <div class="relative w-[100%]">
+          <input
+            type="text"
+            placeholder="Search Transaction..."
+            [(ngModel)]="searchQuery"
+            class="w-full border border-gray-300 rounded-sm pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+          <i
+            class="search-input ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2"
+          ></i>
+        </div>
+      </div>
+      <button
+        (click)="refresh()"
+        class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 transition"
+      >
+        <i class="ph ph-arrows-clockwise" [class.animate-spin]="isLoading()"></i>
+        Refresh
+      </button>
     </div>
   }
   <div class="border border-gray-200 rounded-lg overflow-hidden relative">
@@ -19,19 +45,23 @@
           <p class="text-sm xl:text-lg">No transactions available yet</p>
         </div>
       } @else {
-        <ion-grid class="min-w-[775px] bg-gray-50 font-semibold text-gray-600 text-sm">
+        <ion-grid class="min-w-[880px] bg-gray-50 font-semibold text-gray-600 text-sm">
           <ion-row class="border-b border-gray-200 whitespace-nowrap">
-            <ion-col class="py-6 px-4 min-w-[155px]">Transaction ID</ion-col>
+            <ion-col class="py-6 px-4 min-w-[260px]">Transaction ID</ion-col>
             <ion-col class="py-6 px-4 min-w-[155px]">Type</ion-col>
             <ion-col class="py-6 px-4 min-w-[155px]">Status</ion-col>
             <ion-col class="py-6 px-4 min-w-[155px]">Amount</ion-col>
             <ion-col class="py-6 px-4 min-w-[155px]">Date</ion-col>
           </ion-row>
         </ion-grid>
-        <ion-grid class="min-w-[775px] text-sm text-gray-700">
-          @for (txn of transactions; track txn.id) {
-            <ion-row class="border-b border-gray-200 hover:bg-gray-50 transition whitespace-nowrap">
-              <ion-col class="min-w-[155px] py-6 px-4 font-mono text-gray-800">
+        <ion-grid class="min-w-[880px] text-sm text-gray-700">
+          @for (txn of filteredTransactions; track txn.id) {
+            <ion-row
+              class="border-b border-gray-200 hover:bg-gray-50 transition whitespace-nowrap"
+              [class.bg-purple-50]="txn.id === highlightedId"
+              [class.hover:bg-purple-100]="txn.id === highlightedId"
+            >
+              <ion-col class="min-w-[260px] py-6 px-4 font-mono text-gray-800 overflow-hidden text-ellipsis" title="{{ txn.id }}">
                 {{ txn.id }}
               </ion-col>
               <ion-col class="min-w-[155px] py-6 px-4">
@@ -40,9 +70,11 @@
               <ion-col class="min-w-[155px] py-6 px-4">
                 <span
                   [ngClass]="{
-                    'bg-green-100 text-green-700': txn.status === 'Successful',
+                    'bg-green-100 text-green-700':
+                      txn.status === 'Successful' || txn.status === 'Active',
                     'bg-yellow-100 text-yellow-700': txn.status === 'Pending',
-                    'bg-red-100 text-red-700': txn.status === 'Failed',
+                    'bg-red-100 text-red-700':
+                      txn.status === 'Failed' || txn.status === 'Cancelled',
                   }"
                   class="px-2 py-1 text-xs rounded-full font-medium"
                 >
@@ -59,59 +91,30 @@
           }
         </ion-grid>
         <!-- Pagination Controls -->
-        <div
-          class="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6"
-        >
-          <div class="flex justify-between flex-1 sm:hidden">
-            <ion-button
-              (click)="prevPage()"
-              [disabled]="currentPage === 1"
-              fill="outline"
-              size="small"
-              >Previous</ion-button
-            >
-            <ion-button
-              (click)="nextPage()"
-              [disabled]="currentPage === totalPages"
-              fill="outline"
-              size="small"
-              >Next</ion-button
-            >
-          </div>
-          <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-            <div>
-              <p class="text-sm text-gray-700 font-medium">
-                Page {{ currentPage }} of {{ totalPages }} ({{ count }} total)
-              </p>
-            </div>
-            <div>
-              <nav
-                class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-                aria-label="Pagination"
-              >
-                <ion-button
-                  (click)="prevPage()"
-                  [disabled]="currentPage === 1"
-                  fill="clear"
-                  size="small"
-                >
-                  <ion-icon name="chevron-back-outline"></ion-icon>
-                  Previous
-                </ion-button>
-                <ion-button
-                  (click)="nextPage()"
-                  [disabled]="currentPage === totalPages"
-                  fill="clear"
-                  size="small"
-                >
-                  Next
-                  <ion-icon name="chevron-forward-outline"></ion-icon>
-                </ion-button>
-              </nav>
-            </div>
-          </div>
-        </div>
       }
     </div>
+    @if (count > 0) {
+      <div
+        class="flex items-center justify-between px-4 py-3 border-t border-gray-200 text-sm text-gray-600"
+      >
+        <button
+          (click)="prevPage()"
+          [disabled]="currentPage === 1"
+          class="px-3 py-1 rounded-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Previous
+        </button>
+
+        <span>Page {{ currentPage }} of {{ totalPages }} ({{ count }} total)</span>
+
+        <button
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+          class="px-3 py-1 rounded-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Next
+        </button>
+      </div>
+    }
   </div>
 </section>

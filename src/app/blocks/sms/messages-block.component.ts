@@ -7,6 +7,7 @@ import { SmsService } from '../../core/services/sms.service';
 import { inject, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'messages-block',
@@ -17,8 +18,12 @@ import { switchMap } from 'rxjs/operators';
 export class MessagesBlockComponent implements OnInit, OnDestroy {
   messages: Array<Message> = [];
   isLoading = signal(false);
+  highlightedProviderId: string | null = null;
+
   private smsService = inject(SmsService);
+  private route = inject(ActivatedRoute);
   private pollSubscription?: Subscription;
+  private routeSubscription?: Subscription;
 
   searchTerm = '';
   currentPage = 1;
@@ -29,11 +34,15 @@ export class MessagesBlockComponent implements OnInit, OnDestroy {
   endIndex = 0;
 
   ngOnInit() {
+    this.routeSubscription = this.route.queryParams.subscribe(params => {
+      this.highlightedProviderId = params['providerId'] || null;
+    });
     this.startPolling();
   }
 
   ngOnDestroy() {
     this.pollSubscription?.unsubscribe();
+    this.routeSubscription?.unsubscribe();
   }
 
   startPolling() {
@@ -47,6 +56,7 @@ export class MessagesBlockComponent implements OnInit, OnDestroy {
             .filter((item: any) => item.code)
             .map((item: any) => ({
               id: `msg-${item.id}`,
+              providerId: item.providerId,
               number: item.number,
               message: `Your verification code is ${item.code}`,
               service: item.serviceId,

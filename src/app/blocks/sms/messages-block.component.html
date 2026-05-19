@@ -40,6 +40,8 @@
             @for (message of filteredMessages; track message.id) {
               <ion-row
                 class="border-b border-gray-200 hover:bg-gray-50 transition whitespace-nowrap"
+                [class.bg-purple-50]="message.providerId === highlightedProviderId"
+                [class.hover:bg-purple-100]="message.providerId === highlightedProviderId"
               >
                 <!-- <ion-col class="w-[155px] py-6 px-4 font-mono text-gray-800">
                 {{ message.id }}
@@ -53,11 +55,11 @@
                 >
                   {{ message.message }}
                 </ion-col>
-                <ion-col class="w-[155px] py-6 px-4">
+                <ion-col class="w-[155px] py-6 px-4 capitalize">
                   {{ message.service }}
                 </ion-col>
                 <ion-col class="w-[155px] py-6 px-4">
-                  {{ message.received_at }}
+                  {{ message.received_at | date: 'short' }}
                 </ion-col>
               </ion-row>
             }

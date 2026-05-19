@@ -76,7 +76,7 @@
                 <div>
                   <div class="cost-label">Total Cost</div>
                   <div class="cost-amount">
-                    {{ totalCost() | currency: 'NGN' : 'symbol-narrow' : '1.0-2' }}
+                    {{ totalCost() | currency: currencyCode() : 'symbol-narrow' : '1.0-2' }}
                   </div>
                 </div>
                 <div class="cost-badge">Best Price</div>

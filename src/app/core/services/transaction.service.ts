@@ -49,9 +49,10 @@ export class TransactionService {
   getTransactionHistory(
     page: number = 1,
     limit: number = 10,
+    refresh: boolean = false
   ): Observable<{ transactions: Transaction[]; pagination: any }> {
     const cacheKey = `${page}-${limit}`;
-    if (this.historyCache.has(cacheKey)) {
+    if (!refresh && this.historyCache.has(cacheKey)) {
       return of(this.historyCache.get(cacheKey));
     }
 

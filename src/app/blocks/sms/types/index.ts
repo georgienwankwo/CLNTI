@@ -1,5 +1,6 @@
 export interface Message {
   id: string;
+  providerId: string;
   number: string;
   message: string;
   service: string;

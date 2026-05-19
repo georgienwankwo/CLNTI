@@ -10,6 +10,8 @@ export const environment = {
     measurementId: 'G-VB0JJVVKZ4',
   },
   paystackPublicKey: `BwLJTu2vJNKdRE6Eat7gs`,
-  apiUrl: 'http://localhost:5001/clnt-un/us-central1/api',
+  // apiUrl: 'http://localhost:5001/clnt-un/us-central1/api',
+  apiUrl: 'http://localhost:3000',
+
   // apiUrl: 'https://clnti-backend.onrender.com',
 };

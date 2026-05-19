@@ -1,24 +1,37 @@
 <section class="mt-4">
-  <div class="mb-4 flex items-center gap-3 flex-wrap">
-    <div class="relative w-[100%] sm:w-[350px]">
-      <input
-        type="text"
-        placeholder="Search numbers..."
-        [(ngModel)]="searchTerm"
-        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-      />
-      <i class="ph ph-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+  <div class="mb-4 flex items-center gap-3 flex-wrap justify-between">
+    <div class="flex items-center gap-3 flex-wrap">
+      <div class="relative w-[100%] sm:w-[350px]">
+        <input
+          type="text"
+          placeholder="Search numbers..."
+          [(ngModel)]="searchTerm"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+        />
+        <i
+          class="ph ph-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+        ></i>
+      </div>
+
+      <ion-select
+        interface="popover"
+        [(ngModel)]="selectedStatus"
+        class="w-[100%] sm:w-[150px] border border-gray-300 rounded-lg px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+      >
+        <ion-select-option value="all">All statuses</ion-select-option>
+        <ion-select-option value="Active">Active</ion-select-option>
+        <ion-select-option value="Expired">Expired</ion-select-option>
+        <ion-select-option value="Cancelled">Cancelled</ion-select-option>
+      </ion-select>
     </div>
 
-    <ion-select
-      interface="popover"
-      [(ngModel)]="selectedStatus"
-      class="w-[100%] sm:w-[150px] border border-gray-300 rounded-lg px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+    <button
+      (click)="refresh()"
+      class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 transition"
     >
-      <ion-select-option value="all">All statuses</ion-select-option>
-      <ion-select-option value="active">Active</ion-select-option>
-      <ion-select-option value="expired">Expired</ion-select-option>
-    </ion-select>
+      <i class="ph ph-arrows-clockwise" [class.animate-spin]="isLoading()"></i>
+      Refresh
+    </button>
   </div>
 
   <div class="border border-gray-200 rounded-lg overflow-hidden relative">
@@ -44,7 +57,7 @@
             <ion-col class="py-6 px-4 w-[155px]">Status</ion-col>
             <ion-col class="py-6 px-4 w-[155px]">Service</ion-col>
             <ion-col class="py-6 px-4 w-[155px]">Expires At</ion-col>
-            <ion-col class="py-6 px-4 w-[155px]">Action</ion-col>
+            <ion-col class="py-6 px-4 w-[250px]">Action</ion-col>
             <ion-col class="py-6 px-4 w-[155px]">Code</ion-col>
           </ion-row>
         </ion-grid>
@@ -64,19 +77,33 @@
               <ion-col class="w-[155px] py-6 px-4">
                 {{ number.country }}
               </ion-col>
-              <ion-col class="w-[155px] py-6 px-4">
+              <ion-col class="w-[155px] py-6 px-4 capitalize">
                 {{ number.status }}
               </ion-col>
               <ion-col class="w-[155px] py-6 px-4">
                 {{ number.service }}
               </ion-col>
-              <ion-col class="w-[155px] py-6 px-4">
+              <ion-col class="w-[155px] py-6 px-4 font-mono">
                 {{ number.expires_at }}
               </ion-col>
-              <ion-col class="w-[155px] py-6 px-4">
-                {{ number.action }}
+              <ion-col class="w-[250px] py-6 px-4 flex gap-2">
+                <button
+                  (click)="viewSms(number.providerId)"
+                  class="px-3 py-1.5 bg-primary/10 text-primary rounded-md text-xs font-semibold hover:bg-primary/20 transition"
+                >
+                  View SMS
+                </button>
+                @if (number.status === 'Active') {
+                  <button
+                    (click)="cancelActivation(number.id)"
+                    [disabled]="number.code !== ''"
+                    class="px-3 py-1.5 bg-red-50 text-red-600 border border-red-200 rounded-md text-xs font-semibold hover:bg-red-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Cancel Activation
+                  </button>
+                }
               </ion-col>
-              <ion-col class="w-[155px] py-6 px-4">
+              <ion-col class="w-[155px] py-6 px-4 font-bold text-primary">
                 {{ number.code }}
               </ion-col>
             </ion-row>
@@ -84,6 +111,7 @@
         </ion-grid>
       }
     </div>
+    <!-- Pagination Controls -->
     @if (count > 0) {
       <div
         class="flex items-center justify-between px-4 py-3 border-t border-gray-200 text-sm text-gray-600"
